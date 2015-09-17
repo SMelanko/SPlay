@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(stest)
+project(STest)
 
-aux_source_directory(include INC_LIST)
-aux_source_directory(src SRC_LIST)
+set(INCLUDE_LIST
+	include/Aux.h)
+
+set(SRC_LIST
+	src/Aux.cpp
+	src/main.cpp)
+
+#source_group("Header Files" FILES ${INCLUDE_LIST})
+#source_group("Source Files" FILES ${SRC_LIST})
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME}
-	${INC_LIST}
-    ${SRC_LIST})
+	${INCLUDE_LIST}
+	${SRC_LIST})
+
