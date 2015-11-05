@@ -5,8 +5,6 @@
 Additional libraries:
 <ol>
   <li>C++ Format is an open-source formatting library for C++.
-    <ol>
-      <li>https://github.com/cppformat/cppformat</li>
-    </ol>
+		https://github.com/cppformat/cppformat
   </li>
 </ol>
