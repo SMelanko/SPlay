@@ -6,7 +6,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
 	set(CMAKE_BUILD_TYPE Debug CACHE STRING "None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
 
 if(MSVC)
 	add_definitions(/W3)
@@ -42,21 +44,28 @@ else()
 endif()
 
 set(INCLUDE_LIST
-	include/Aux.h
-	include/format.h)
+	)
+
+set(cppformat_INCLUDE_LIST
+	include/cppformat/format.h)
 
 set(SRC_LIST
-	src/Aux.cpp
-	src/format.cc
 	src/main.cpp)
 
+set(cppformat_SRC_LIST
+	src/cppformat/format.cc)
+
 source_group("Header Files" FILES ${INCLUDE_LIST})
+source_group("Header Files\\cppformat" FILES ${cppformat_INCLUDE_LIST})
 source_group("Source Files" FILES ${SRC_LIST})
+source_group("Source Files\\cppformat" FILES ${cppformat_SRC_LIST})
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(${PROJECT_NAME}
 	${INCLUDE_LIST}
-	${SRC_LIST})
+	${cppformat_INCLUDE_LIST}
+	${SRC_LIST}
+	${cppformat_SRC_LIST})
 
