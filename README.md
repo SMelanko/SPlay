@@ -3,5 +3,10 @@
 ![ScreenShot](https://raw.github.com/SMelanko/STest/master/res/sm.png) My test project.
 
 Additional libraries:
-1. C++ Format is an open-source formatting library for C++.
-	https://github.com/cppformat/cppformat
+<ol>
+  <li>C++ Format is an open-source formatting library for C++.
+    <ol>
+      <li>https://github.com/cppformat/cppformat</li>
+    </ol>
+  </li>
+</ol>
