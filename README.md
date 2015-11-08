@@ -4,6 +4,6 @@
 
 Additional libraries:
 <ol>
-  <li>C++ Format is an open-source formatting library for C++(https://github.com/cppformat/cppformat)</li>
-  <li>Very fast, header only, C++ logging library(https://github.com/gabime/spdlog)</li>
+  <li>[C++ Format]((https://github.com/cppformat/cppformat)) is an open-source formatting library for C++</li>
+  <li>Very fast, header only, [C++ logging library](https://github.com/gabime/spdlog)</li>
 </ol>
