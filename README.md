@@ -4,5 +4,6 @@
 
 Additional libraries:
 
-1. [C++ Format](https://github.com/cppformat/cppformat) is an open-source formatting library for C++
-2. Very fast, header only, [C++ logging library](https://github.com/gabime/spdlog)
+1. [C++ Format](https://github.com/cppformat/cppformat) is an open-source formatting library for C++;
+2. Very fast, header only, [C++ logging library](https://github.com/gabime/spdlog);
+3. C++11 serialization library - [cereal](https://github.com/USCiLab/cereal).
