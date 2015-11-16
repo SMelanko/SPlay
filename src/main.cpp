@@ -5,7 +5,7 @@
 #include <cereal\types\unordered_map.hpp>
 #include <fstream>
 #include "cppformat\format.h"
-#include "spdlog\spdlog.h"
+#include "Logger.h"
 # if 0
 struct Record
 {
@@ -47,10 +47,15 @@ int main()
 	fmt::print(str);
 
 	// Create a file rotating logger with 5mb size max and 3 rotated files
-	auto log = spdlog::rotating_logger_mt("file_logger", "mylogfile", 10240, 3);
-	for (int i = 200; i < 300; ++i)
-		log->info("{} * {} equals {:>10}", i, i, i*i);
+	decltype(auto) logger = splay::log::Logger::GetInstance();
 
+	splay::log::Logger::GetInstance().Ref()->debug() << "asd";
+	splay::log::Logger::GetInstance().Ref()->debug() << "qwe";
+	splay::log::Logger::GetInstance().Ref()->debug() << "123";
+	
+	//for (int i = 100; i < 200; ++i)
+	//	LOG_TRACE << i << " * " << i << " = " << i * i;
+#if 0
 	std::ofstream os{ "test.json", std::ios::binary };
 	cereal::JSONOutputArchive archive{ os };
 
@@ -61,6 +66,6 @@ int main()
 	//data.data->insert(std::make_pair<uint32_t, Record>(
 	//	123, Record{ 1,2,3.3 }));
 	archive(cereal::make_nvp("User", data));
-
+#endif
 	return 0;
 }

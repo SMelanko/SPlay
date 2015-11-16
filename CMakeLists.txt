@@ -44,12 +44,13 @@ else()
 endif()
 
 set(INCLUDE_LIST
-	)
+	include/Logger.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)
 
 set(SRC_LIST
+	src/Logger.cpp
 	src/main.cpp)
 
 set(cppformat_SRC_LIST
