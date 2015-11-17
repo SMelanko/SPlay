@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "spdlog\spdlog.h"
+#include <spdlog/spdlog.h>
 
 namespace splay
 {
@@ -27,29 +27,38 @@ public:
 	//! Move assign operator.
 	Logger& operator=(Logger&&) noexcept = delete;
 
-	static Logger& GetInstance();
+	//! Returns singleton instance of the logger.
+	static Logger& Instance();
 
-	std::shared_ptr<spdlog::logger> Ref()
+	spdlog::details::line_logger Debug()
 	{
-		return mLogger;
+		if (mLogger->level() != spdlog::level::debug)
+			mLogger->set_level(spdlog::level::debug);
+		return Instance().Ref().debug();
 	}
 
 private:
 	//! Constructor.
 	Logger();
 
-private:
-	//! File logger instance.
-	std::shared_ptr<spdlog::logger> mLogger;
+	spdlog::logger& Ref()
+	{
+		return *mLogger.get();
+	}
 
+private:
+	//! Logger instance.
 	static std::unique_ptr<Logger> mInstance;
+	//! Helper flag for creation logger only once.
 	static std::once_flag mOnceFlag;
+	//! File logger.
+	std::shared_ptr<spdlog::logger> mLogger;
 };
 
 } } // splay::log
 
 //#define LOG_TRACE splay::log::GetLogger(spdlog::level::trace)
-#define LOG_DEBUG splay::log::Logger::GetInstance().Ref()->debug()
+#define SPLAY_LOG_DEBUG splay::log::Logger::Instance().Debug()
 //#define LOG_NOTICE
 //#define LOG_WARN
 //#define LOG_ERROR

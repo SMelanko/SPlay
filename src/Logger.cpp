@@ -1,8 +1,5 @@
 #include "Logger.h"
 
-// TODO
-#include <iostream>
-
 namespace splay
 {
 namespace log
@@ -18,11 +15,10 @@ Logger::Logger()
 	mLogger->set_level(spdlog::level::debug);
 }
 
-Logger& Logger::GetInstance()
+Logger& Logger::Instance()
 {
 	std::call_once(mOnceFlag, [] {
 		mInstance.reset(new Logger);
-		std::cout << "Create once\n";
 	});
 
 	return *mInstance.get();

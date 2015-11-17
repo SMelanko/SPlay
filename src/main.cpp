@@ -1,10 +1,11 @@
 #include <iostream>
-#include <cereal\archives\binary.hpp>
-#include <cereal\archives\json.hpp>
-#include <cereal\types\memory.hpp>
-#include <cereal\types\unordered_map.hpp>
+#if 0
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/unordered_map.hpp>
+#endif
 #include <fstream>
-#include "cppformat\format.h"
 #include "Logger.h"
 # if 0
 struct Record
@@ -18,7 +19,7 @@ struct Record
 		ar(x, y, z);
 	}
 };
-#endif
+
 struct Data
 {
 	int32_t id;
@@ -30,7 +31,7 @@ struct Data
 	{
 		ar(CEREAL_NVP(name), CEREAL_NVP(surname));
 	}
-#if 0
+
 	template <class Archive>
 	void load(Archive& ar)
 	{
@@ -38,23 +39,21 @@ struct Data
 		id = ++idGen;
 		ar(name, surname);
 	}
-#endif
 };
+#endif
+
+void asdlog(int id)
+{
+	for (int i = 0; i < 1000; ++i)
+		SPLAY_LOG_DEBUG << " Thread " << id << " = " << i;
+}
 
 int main()
 {
-	std::string str{ fmt::format("Hello {}!\n", "Slava") };
-	fmt::print(str);
+	//std::string str{ fmt::format("Hello {}!\n", "Slava") };
+	//fmt::print(str);
 
-	// Create a file rotating logger with 5mb size max and 3 rotated files
-	decltype(auto) logger = splay::log::Logger::GetInstance();
 
-	splay::log::Logger::GetInstance().Ref()->debug() << "asd";
-	splay::log::Logger::GetInstance().Ref()->debug() << "qwe";
-	splay::log::Logger::GetInstance().Ref()->debug() << "123";
-	
-	//for (int i = 100; i < 200; ++i)
-	//	LOG_TRACE << i << " * " << i << " = " << i * i;
 #if 0
 	std::ofstream os{ "test.json", std::ios::binary };
 	cereal::JSONOutputArchive archive{ os };

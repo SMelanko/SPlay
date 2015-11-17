@@ -64,15 +64,19 @@ source_group("Source Files\\cppformat" FILES ${cppformat_SRC_LIST})
 #
 # Third party include derictories.
 #
-set(external_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/external)
+set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
+#set(spdlog_INCLUDE_DIRS "${external_DIR_PATH}/spdlog")
+#set(cereal_INCLUDE_DIRS "${external_DIR_PATH}/cereal")
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${external_DIR_PATH})
+	#${spdlog_INCLUDE_DIRS}
+	${external_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}
 	${INCLUDE_LIST}
 	${cppformat_INCLUDE_LIST}
-	${external_DIR_PATH}
+	${external_INCLUDE_DIRS}
+	#${cereal_INCLUDE_DIRS}
 	${SRC_LIST}
 	${cppformat_SRC_LIST})
