@@ -22,9 +22,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-
 // spdlog main header file.
-//see example.cpp for usage example
+// see example.cpp for usage example
 
 #pragma once
 
@@ -147,9 +146,6 @@ void drop_all();
 #else
 #define SPDLOG_DEBUG(logger, ...)
 #endif
-
-
 }
-
 
 #include "details/spdlog_impl.h"

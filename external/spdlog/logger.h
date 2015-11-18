@@ -31,8 +31,8 @@
 // 2. Format the message using the formatter function
 // 3. Pass the formatted message to its sinks to performa the actual logging
 
-#include<vector>
-#include<memory>
+#include <vector>
+#include <memory>
 #include "sinks/base_sink.h"
 #include "common.h"
 
@@ -53,6 +53,7 @@ public:
     logger(const std::string& name, const It& begin, const It& end);
 
     virtual ~logger();
+
     logger(const logger&) = delete;
     logger& operator=(const logger&) = delete;
 
@@ -73,7 +74,6 @@ public:
     template <typename... Args> details::line_logger alert(const char* fmt, const Args&... args);
     template <typename... Args> details::line_logger emerg(const char* fmt, const Args&... args);
 
-
     // logger.info(msg) << ".." call style
     template <typename T> details::line_logger trace(const T&);
     template <typename T> details::line_logger debug(const T&);
@@ -85,8 +85,7 @@ public:
     template <typename T> details::line_logger alert(const T&);
     template <typename T> details::line_logger emerg(const T&);
 
-
-    // logger.info() << ".." call  style
+    // logger.info() << ".." call style
     details::line_logger trace();
     details::line_logger debug();
     details::line_logger info();
@@ -96,8 +95,6 @@ public:
     details::line_logger critical();
     details::line_logger alert();
     details::line_logger emerg();
-
-
 
     // Create log message with the given level, no matter what is the actual logger's level
     template <typename... Args>
@@ -119,13 +116,11 @@ protected:
     template<typename T>
     inline details::line_logger _log_if_enabled(level::level_enum lvl, const T& msg);
 
-
     friend details::line_logger;
     std::string _name;
     std::vector<sink_ptr> _sinks;
     formatter_ptr _formatter;
     std::atomic_int _level;
-
 };
 }
 

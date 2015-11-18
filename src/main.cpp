@@ -42,17 +42,21 @@ struct Data
 };
 #endif
 
-void asdlog(int id)
-{
-	for (int i = 0; i < 1000; ++i)
-		SPLAY_LOG_DEBUG << " Thread " << id << " = " << i;
-}
-
 int main()
 {
 	//std::string str{ fmt::format("Hello {}!\n", "Slava") };
 	//fmt::print(str);
 
+	SPLAY_LOG_ALERT("hello logger {}", 123);
+	SPLAY_LOG_CRITICAL("hello {} logger", "lol");
+	std::string tmp{ "hello logger from string" };
+	SPLAY_LOG_DEBUG(tmp.c_str());
+	SPLAY_LOG_EMERG("hello logger");
+	SPLAY_LOG_ERROR("hello logger");
+	SPLAY_LOG_INFO("hello logger");
+	SPLAY_LOG_NOTICE("hello logger");
+	SPLAY_LOG_TRACE("hello logger");
+	SPLAY_LOG_WARNING("hello logger");
 
 #if 0
 	std::ofstream os{ "test.json", std::ios::binary };
