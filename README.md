@@ -1,8 +1,9 @@
-# STest
+# SPlay
 
-![ScreenShot](https://raw.github.com/SMelanko/STest/master/res/sm.png) My test project.
+<img src="https://raw.github.com/SMelanko/STest/master/res/splay_logo.png" align="right"/><p>My test project.</p>
 
-Additional libraries:
+
+## Additional libraries:
 
 1. [C++ Format](https://github.com/cppformat/cppformat) is an open-source formatting library for C++;
 2. Very fast, header only, [C++ logging library](https://github.com/gabime/spdlog);
