@@ -1,7 +1,6 @@
 # SPlay
 
-<img src="https://raw.github.com/SMelanko/STest/master/res/splay_logo.png" align="right"/><p>My test project.</p>
-
+<img src="https://raw.github.com/SMelanko/STest/master/res/splay_logo_main.png" align="right"/><p>My test project.</p>
 
 ## Additional libraries:
 
