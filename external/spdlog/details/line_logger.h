@@ -34,6 +34,7 @@ namespace spdlog
 {
 namespace details
 {
+
 class line_logger
 {
 public:

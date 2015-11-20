@@ -2,8 +2,6 @@
 
 namespace splay
 {
-namespace log
-{
 
 std::unique_ptr<Logger> Logger::mInstance;
 std::once_flag Logger::mOnceFlag;
@@ -24,4 +22,4 @@ spdlog::logger& Logger::Instance()
 	return *(mInstance->mLogger.get());
 }
 
-} } // splay::log
+} // splay
