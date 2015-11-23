@@ -3,6 +3,12 @@
 #ifndef _SPLAY_LOGGER_H_
 #define _SPLAY_LOGGER_H_
 
+#if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 180021114
+#define NOEXCEPT noexcept
+#else
+#define NOEXCEPT
+#endif
+
 #include <spdlog/spdlog.h>
 
 namespace splay
@@ -17,11 +23,11 @@ public:
 	//! Copy constructor.
 	Logger(const Logger&) = delete;
 	//! Move constructor.
-	Logger(Logger&&) noexcept = delete;
+	Logger(Logger&&) NOEXCEPT = delete;
 	//! Copy assign operator.
 	Logger& operator=(const Logger&) = delete;
 	//! Move assign operator.
-	Logger& operator=(Logger&&) noexcept = delete;
+	Logger& operator=(Logger&&) NOEXCEPT = delete;
 
 	//! Returns singleton instance of the logger.
 	static spdlog::logger& Instance();
@@ -42,11 +48,22 @@ private:
 
 } // splay
 
-#define SPLAY_LOG_CRITICAL(...) splay::Logger::Instance().force_log(spdlog::level::critical, __VA_ARGS__)
-#define SPLAY_LOG_DEBUG(...)    splay::Logger::Instance().force_log(spdlog::level::debug, __VA_ARGS__)
-#define SPLAY_LOG_ERROR(...)    splay::Logger::Instance().force_log(spdlog::level::err, __VA_ARGS__)
-#define SPLAY_LOG_INFO(...)     splay::Logger::Instance().force_log(spdlog::level::info, __VA_ARGS__)
-#define SPLAY_LOG_TRACE(...)    splay::Logger::Instance().force_log(spdlog::level::trace, __VA_ARGS__)
-#define SPLAY_LOG_WARNING(...)  splay::Logger::Instance().force_log(spdlog::level::warn, __VA_ARGS__)
+#define SPLAY_LOG_CRITICAL(...) splay::Logger::Instance().force_log( \
+	spdlog::level::critical, __VA_ARGS__)
+
+#define SPLAY_LOG_DEBUG(...)    splay::Logger::Instance().force_log( \
+	spdlog::level::debug, __VA_ARGS__)
+
+#define SPLAY_LOG_ERROR(...)    splay::Logger::Instance().force_log( \
+	spdlog::level::err, __VA_ARGS__)
+
+#define SPLAY_LOG_INFO(...)     splay::Logger::Instance().force_log( \
+	spdlog::level::info, __VA_ARGS__)
+
+#define SPLAY_LOG_TRACE(...)    splay::Logger::Instance().force_log( \
+	spdlog::level::trace, __VA_ARGS__)
+
+#define SPLAY_LOG_WARNING(...)  splay::Logger::Instance().force_log( \
+	spdlog::level::warn, __VA_ARGS__)
 
 #endif // _SPLAY_LOGGER_H_

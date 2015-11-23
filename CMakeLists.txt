@@ -18,27 +18,21 @@ else()
 	message("Unknown compiler")
 endif()
 
-find_package(Qt5Widgets QUIET)
+find_package(Qt5Widgets)
 
 if(Qt5Widgets_FOUND)
-	message(STATUS "Qt5 package found")
+	include_directories(${Qt5Widgets_INCLUDE_DIRS})
+	add_definitions(${Qt5Widgets_DEFINITIONS})
 
-	#include_directories(${Qt5Widgets_INCLUDE_DIRS})
-	#message(STATUS "${Qt5Widgets_INCLUDE_DIRS}")
-	#/usr/include/x86_64-linux-gnu/qt5/;
-	#/usr/include/x86_64-linux-gnu/qt5/QtWidgets;
-	#/usr/include/x86_64-linux-gnu/qt5/QtGui;
-	#/usr/include/x86_64-linux-gnu/qt5/QtCore;
-	#/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64
-
-	#add_definitions(${Qt5Widgets_DEFINITIONS})
-	#message(STATUS "${Qt5Widgets_DEFINITIONS}")
-	#-DQT_WIDGETS_LIB;
-	#-DQT_GUI_LIB;
-	#-DQT_CORE_LIB
-
-	#set(CMake_QT_LIBRARIES ${Qt5Widgets_LIBRARIES})
-	#set(QT_QTMAIN_LIBRARY ${Qt5Core_QTMAIN_LIBRARIES})
+	set(CMake_QT_LIBRARIES
+		${Qt5Widgets_LIBRARIES})
+	
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+	
+	if(WIN32 AND TARGET Qt5::Core)
+		get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
+		get_filename_component(Qt_BIN_DIR "${_Qt5_Core_LOCATION}" PATH)
+	endif()
 else()
 	message(FATAL_ERROR "Qt5 package was not found")
 endif()
@@ -55,6 +49,8 @@ set(SRC_LIST
 
 set(cppformat_SRC_LIST
 	src/cppformat/format.cc)
+	
+qt5_wrap_cpp(MOC_SRC_LIST ${INCLUDE_LIST})
 
 source_group("Header Files" FILES ${INCLUDE_LIST})
 source_group("Header Files\\cppformat" FILES ${cppformat_INCLUDE_LIST})
@@ -65,18 +61,23 @@ source_group("Source Files\\cppformat" FILES ${cppformat_SRC_LIST})
 # Third party include derictories.
 #
 set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
-#set(spdlog_INCLUDE_DIRS "${external_DIR_PATH}/spdlog")
-#set(cereal_INCLUDE_DIRS "${external_DIR_PATH}/cereal")
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	#${spdlog_INCLUDE_DIRS}
 	${external_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}
 	${INCLUDE_LIST}
 	${cppformat_INCLUDE_LIST}
 	${external_INCLUDE_DIRS}
-	#${cereal_INCLUDE_DIRS}
 	${SRC_LIST}
 	${cppformat_SRC_LIST})
+
+target_link_libraries(${PROJECT_NAME}
+	${Qt5Core_QTMAIN_LIBRARIES}
+	${CMake_QT_LIBRARIES}
+)
+	
+if(Qt_BIN_DIR)
+	set_property(TARGET ${PROJECT_NAME} PROPERTY Qt_BIN_DIR ${Qt_BIN_DIR})
+endif()

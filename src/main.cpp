@@ -1,3 +1,4 @@
+#include <QApplication>
 #include <iostream>
 #if 0
 #include <cereal/archives/binary.hpp>
@@ -42,8 +43,10 @@ struct Data
 };
 #endif
 
-int main()
+int main(int argc, char** argv)
 {
+	QApplication a{argc, argv};
+#if 0
 	//std::string str{ fmt::format("Hello {}!\n", "Slava") };
 	//fmt::print(str);
 
@@ -55,7 +58,6 @@ int main()
 	SPLAY_LOG_TRACE("hello logger");
 	SPLAY_LOG_WARNING("hello logger");
 
-#if 0
 	std::ofstream os{ "test.json", std::ios::binary };
 	cereal::JSONOutputArchive archive{ os };
 
@@ -67,5 +69,5 @@ int main()
 	//	123, Record{ 1,2,3.3 }));
 	archive(cereal::make_nvp("User", data));
 #endif
-	return 0;
+	return a.exec();
 }
