@@ -3,11 +3,7 @@
 #ifndef _SPLAY_LOGGER_H_
 #define _SPLAY_LOGGER_H_
 
-#if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 180021114
-#define NOEXCEPT noexcept
-#else
-#define NOEXCEPT
-#endif
+#include "Common.h"
 
 #include <spdlog/spdlog.h>
 
@@ -46,7 +42,7 @@ private:
 	std::shared_ptr<spdlog::logger> mLogger;
 };
 
-} // splay
+} // namespace splay
 
 #define SPLAY_LOG_CRITICAL(...) splay::Logger::Instance().force_log( \
 	spdlog::level::critical, __VA_ARGS__)

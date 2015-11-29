@@ -1,13 +1,11 @@
-#include <QApplication>
-#include <iostream>
+#include "Application.h"
+#include "Logger.h"
 #if 0
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/types/unordered_map.hpp>
 #endif
-#include <fstream>
-#include "Logger.h"
 # if 0
 struct Record
 {
@@ -45,7 +43,10 @@ struct Data
 
 int main(int argc, char** argv)
 {
-	QApplication a{argc, argv};
+	splay::Application a{ argc, argv };
+	return a.exec();
+}
+
 #if 0
 	//std::string str{ fmt::format("Hello {}!\n", "Slava") };
 	//fmt::print(str);
@@ -69,5 +70,3 @@ int main(int argc, char** argv)
 	//	123, Record{ 1,2,3.3 }));
 	archive(cereal::make_nvp("User", data));
 #endif
-	return a.exec();
-}

@@ -1,7 +1,7 @@
 @echo off
 
-mkdir ..\build\vc14_x86
-pushd ..\build\vc14_x86
+mkdir ..\build\vc12_x86
+pushd ..\build\vc12_x86
 
 cmake^
 	-G"Visual Studio 12 2013" -T "v120_xp" ^
