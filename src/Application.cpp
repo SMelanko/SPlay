@@ -4,7 +4,7 @@ namespace splay
 {
 
 Application::Application(int& argc, char** argv)
-	: QApplication(argc, argv)
+	: QCoreApplication(argc, argv)
 {
 	setOrganizationName("SM");
 	setApplicationName("SPlay");

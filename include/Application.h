@@ -3,12 +3,12 @@
 #ifndef _SPLAY_APPLICATION_H_
 #define _SPLAY_APPLICATION_H_
 
-#include <QApplication>
+#include <QCoreApplication>
 
 namespace splay
 {
 
-class Application : public QApplication
+class Application : public QCoreApplication
 {
 	Q_OBJECT
 
