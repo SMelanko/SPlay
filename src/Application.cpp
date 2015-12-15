@@ -1,13 +1,20 @@
 #include "Application.h"
+#include "MainWindow.h"
 
 namespace splay
 {
 
 Application::Application(int& argc, char** argv)
-	: QCoreApplication(argc, argv)
+	: QApplication{ argc, argv }
 {
-	setOrganizationName("SM");
 	setApplicationName("SPlay");
+	setOrganizationName("SM"); // Fictitious parameter.
+	setOrganizationDomain("sm.com.ua"); // Fictitious parameter.
+	setApplicationDisplayName(tr("SPlay music player"));
+	//setWindowIcon(QIcon(":/logo.png"));
+
+	mMainWnd = new MainWindow{};
+	mMainWnd->show();
 
 	// Load translations.
 	// Parse command line arguments.
@@ -16,7 +23,7 @@ Application::Application(int& argc, char** argv)
 
 Application::~Application()
 {
-	//delete mMainWnd;
+	delete mMainWnd;
 }
 
 } // namespace splay

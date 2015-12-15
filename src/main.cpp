@@ -43,10 +43,21 @@ struct Data
 
 int main(int argc, char** argv)
 {
-	SPLAY_LOG_INFO("Init");
-	splay::Application a{ argc, argv };
-	return a.exec();
-	SPLAY_LOG_INFO("Destroy");
+	try {
+		SPLAY_LOG_INFO("Init");
+
+		splay::Application a{ argc, argv };
+
+		return a.exec();
+	}
+	catch (const std::exception exc) {
+		SPLAY_LOG_ERROR("std::exception has been occurred");
+	}
+	catch (...) {
+		SPLAY_LOG_ERROR("exception has been occurred");
+	}
+
+	return 1;
 }
 
 #if 0

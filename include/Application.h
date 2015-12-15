@@ -3,12 +3,14 @@
 #ifndef _SPLAY_APPLICATION_H_
 #define _SPLAY_APPLICATION_H_
 
-#include <QCoreApplication>
+#include <QApplication>
 
 namespace splay
 {
 
-class Application : public QCoreApplication
+class MainWindow;
+
+class Application : public QApplication
 {
 	Q_OBJECT
 
@@ -17,6 +19,10 @@ public:
 	explicit Application(int& argc, char** argv);
 	//! Destructor.
 	~Application();
+
+private:
+	//! Main window handle.
+	MainWindow* mMainWnd;
 };
 
 } // namespace splay

@@ -40,7 +40,8 @@ endif()
 set(INCLUDE_LIST
 	include/Application.h
 	include/Common.h
-	include/Logger.h)
+	include/Logger.h
+	include/MainWindow.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)
@@ -48,13 +49,15 @@ set(cppformat_INCLUDE_LIST
 set(SRC_LIST
 	src/Application.cpp
 	src/Logger.cpp
-	src/main.cpp)
+	src/main.cpp
+	src/MainWindow.cpp)
 
 set(cppformat_SRC_LIST
 	src/cppformat/format.cc)
 	
 qt5_wrap_cpp(MOC_SRC_LIST
-	include/Application.h)
+	include/Application.h
+	include/MainWindow.h)
 
 source_group("Header Files" FILES ${INCLUDE_LIST})
 source_group("Header Files\\cppformat" FILES ${cppformat_INCLUDE_LIST})
@@ -71,7 +74,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${external_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME}
+add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 	${INCLUDE_LIST}
 	${cppformat_INCLUDE_LIST}
 	#${external_INCLUDE_DIRS}
