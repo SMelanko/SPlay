@@ -5,6 +5,9 @@
 
 #include <QMainWindow>
 
+QT_FORWARD_DECLARE_CLASS(QAbstractButton)
+QT_FORWARD_DECLARE_CLASS(QSlider)
+
 namespace splay
 {
 
@@ -17,6 +20,16 @@ public:
 	explicit MainWindow(QWidget* parent = Q_NULLPTR);
 	//! Destructor.
 	~MainWindow();
+
+private:
+	//! Play/pause button.
+	QAbstractButton* mPlayBtn;
+	//! Skip backward button.
+	QAbstractButton* mBackwardBtn;
+	//! Skip forward button.
+	QAbstractButton* mForwardBtn;
+	//! Seek slider.
+	QSlider* mPosSldr;
 };
 
 } // namespace splay
