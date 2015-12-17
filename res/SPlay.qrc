@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="btn_forward">Icons/btn_forward.png</file>
+		<file alias="btn_pause">Icons/btn_pause.png</file>
+		<file alias="btn_play">Icons/btn_play.png</file>
+		<file alias="btn_rewind">Icons/btn_rewind.png</file>
+    </qresource>
+</RCC>

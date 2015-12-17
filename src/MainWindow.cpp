@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 
+#include <QAction>
 #include <QBoxLayout>
+#include <QMenuBar>
 #include <QPushButton>
 #include <QSlider>
 #include <QStatusBar>
@@ -15,6 +17,9 @@ MainWindow::MainWindow(QWidget* parent)
 	resize(640, 480);
 	setWindowTitle("SPlay");
 
+	_CreateActions();
+	_CreateMenu();
+
 	// Create and set central widget.
 	QWidget* cw{ new QWidget };
 	setCentralWidget(cw);
@@ -26,24 +31,27 @@ MainWindow::MainWindow(QWidget* parent)
 	al->addStretch(1);
 	mBackwardBtn = new QPushButton{ this };
 	mBackwardBtn->setEnabled(true);
-	mBackwardBtn->setFixedSize(30, 30);
-	mBackwardBtn->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+	mBackwardBtn->setFixedSize(36, 36);
+	mBackwardBtn->setIcon(QIcon{ ":/btn_rewind" });
+	mBackwardBtn->setIconSize(QSize{ 28, 28 });
 	mBackwardBtn->setToolTip(tr("Previous"));
 	al->addWidget(mBackwardBtn);
-	al->addSpacing(20);
+	al->addSpacing(15);
 
 	mPlayBtn = new QPushButton{ this };
 	mPlayBtn->setEnabled(true); // false
-	mPlayBtn->setFixedSize(60, 60);
-	mPlayBtn->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+	mPlayBtn->setFixedSize(50, 50);
+	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
+	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setToolTip(tr("Play"));
 	al->addWidget(mPlayBtn);
-	al->addSpacing(20);
+	al->addSpacing(15);
 
 	mForwardBtn = new QPushButton{ this };
 	mForwardBtn->setEnabled(true); // false
-	mForwardBtn->setFixedSize(30, 30);
-	mForwardBtn->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+	mForwardBtn->setFixedSize(36, 36);
+	mForwardBtn->setIcon(QIcon{ ":/btn_forward" });
+	mForwardBtn->setIconSize(QSize{ 28, 28 });
 	mForwardBtn->setToolTip(tr("Next"));
 	al->addWidget(mForwardBtn);
 	al->addStretch(1);
@@ -63,6 +71,20 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::_CreateActions()
+{
+	mExitAct = new QAction{ tr("E&xit"), this };
+	mExitAct->setShortcut(QKeySequence::Quit);
+	mExitAct->setStatusTip(tr("Exit the application"));
+	connect(mExitAct, &QAction::triggered, this, &MainWindow::close);
+}
+
+void MainWindow::_CreateMenu()
+{
+	mFileMenu = menuBar()->addMenu(tr("&File"));
+	mFileMenu->addAction(mExitAct);
 }
 
 } // namespace splay

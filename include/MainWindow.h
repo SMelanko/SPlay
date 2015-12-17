@@ -6,6 +6,8 @@
 #include <QMainWindow>
 
 QT_FORWARD_DECLARE_CLASS(QAbstractButton)
+QT_FORWARD_DECLARE_CLASS(QAction)
+QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 
 namespace splay
@@ -22,6 +24,12 @@ public:
 	~MainWindow();
 
 private:
+	//! Creates application actions.
+	void _CreateActions();
+	//! Creates application menu.
+	void _CreateMenu();
+
+private:
 	//! Play/pause button.
 	QAbstractButton* mPlayBtn;
 	//! Skip backward button.
@@ -30,6 +38,20 @@ private:
 	QAbstractButton* mForwardBtn;
 	//! Seek slider.
 	QSlider* mPosSldr;
+
+	//
+	// Actions.
+	//
+
+	//! Exit the application.
+	QAction* mExitAct;
+
+	//
+	// Menu.
+	//
+
+	//! File.
+	QMenu* mFileMenu;
 };
 
 } // namespace splay
