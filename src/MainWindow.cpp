@@ -1,10 +1,13 @@
 #include "MainWindow.h"
+#include "TableWgt.h"
 
 #include <QAction>
 #include <QBoxLayout>
+#include <QFileDialog>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QSlider>
+#include <QStandardPaths>
 #include <QStatusBar>
 #include <QStyle>
 
@@ -44,6 +47,7 @@ MainWindow::MainWindow(QWidget* parent)
 	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setToolTip(tr("Play"));
+	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::TogglePlayback);
 	al->addWidget(mPlayBtn);
 	al->addSpacing(15);
 
@@ -64,6 +68,9 @@ MainWindow::MainWindow(QWidget* parent)
 	mPosSldr->setToolTip(tr("Seek"));
 	ml->addWidget(mPosSldr);
 
+	m_PlaylistTable = new TableWgt{ this };
+	ml->addWidget(m_PlaylistTable);
+
 	centralWidget()->setLayout(ml);
 
 	statusBar()->showMessage(tr("SPlay music player"));
@@ -73,18 +80,70 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::PlayFile(const QString& filePath)
+{
+	state = true;
+	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
+	mPlayBtn->setIconSize(QSize{ 40, 40 });
+}
+
+void MainWindow::TogglePlayback()
+{
+	if (state) {
+		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
+		mPlayBtn->setIconSize(QSize{ 40, 40 });
+	}
+	else {
+		mPlayBtn->setIcon(QIcon{ ":/btn_play" });
+		mPlayBtn->setIconSize(QSize{ 40, 40 });
+	}
+
+	state = !state;
+}
+
 void MainWindow::_CreateActions()
 {
+	mOpenFileAct = new QAction{ tr("&Open"), this };
+	mOpenFileAct->setShortcut(QKeySequence::Open);
+	mOpenFileAct->setStatusTip(tr("Replace current playlist with chosen file(s), then start playing."));
+	connect(mOpenFileAct, &QAction::triggered, this, [&]() {
+		const QStringList musicPaths = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		const auto dir = musicPaths.isEmpty() ? QDir::homePath() : musicPaths.first();
+
+		const QString filePath = QFileDialog::getOpenFileName(
+			this, tr("Open file"), dir, tr("MP3 files (*.mp3);;All files (*.*)"));
+
+		if (!filePath.isEmpty()) {
+			PlayFile(filePath);
+		}
+	});
+
 	mExitAct = new QAction{ tr("E&xit"), this };
 	mExitAct->setShortcut(QKeySequence::Quit);
-	mExitAct->setStatusTip(tr("Exit the application"));
-	connect(mExitAct, &QAction::triggered, this, &MainWindow::close);
+	mExitAct->setStatusTip(tr("Exit SPlay."));
+	connect(mExitAct, &QAction::triggered, this, &MainWindow::close); // QApp::quit ?
+
+	mPreferecesAct = new QAction{ tr("&Preferences"), this };
+	//mPrefereces->setShortcut
+	mPreferecesAct->setStatusTip(tr("SPlay settings."));
+
+	mAboutAct = new QAction{ tr("&About"), this };
+	//mPrefereces->setShortcut
+	mAboutAct->setStatusTip(tr("About SPlay"));
 }
 
 void MainWindow::_CreateMenu()
 {
 	mFileMenu = menuBar()->addMenu(tr("&File"));
+	mFileMenu->addAction(mOpenFileAct);
+	mFileMenu->addSeparator();
 	mFileMenu->addAction(mExitAct);
+
+	mSettingsMenu = menuBar()->addMenu(tr("&Settings"));
+	mSettingsMenu->addAction(mPreferecesAct);
+
+	mHelpMenu = menuBar()->addMenu(tr("&Help"));
+	mHelpMenu->addAction(mAboutAct);
 }
 
 } // namespace splay

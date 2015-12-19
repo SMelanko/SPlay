@@ -41,7 +41,8 @@ set(INCLUDE_LIST
 	include/Application.h
 	include/Common.h
 	include/Logger.h
-	include/MainWindow.h)
+	include/MainWindow.h
+	include/TableWgt.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)
@@ -50,14 +51,16 @@ set(SRC_LIST
 	src/Application.cpp
 	src/Logger.cpp
 	src/main.cpp
-	src/MainWindow.cpp)
+	src/MainWindow.cpp
+	src/TableWgt.cpp)
 
 set(cppformat_SRC_LIST
 	src/cppformat/format.cc)
 
 qt5_wrap_cpp(MOC_SRC_LIST
 	include/Application.h
-	include/MainWindow.h)
+	include/MainWindow.h
+	include/TableWgt.h)
 
 qt5_add_resources(RES_LIST
 	res/SPlay.qrc)

@@ -10,6 +10,8 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 
+class TableWgt;
+
 namespace splay
 {
 
@@ -22,6 +24,12 @@ public:
 	explicit MainWindow(QWidget* parent = Q_NULLPTR);
 	//! Destructor.
 	~MainWindow();
+
+public slots:
+	//! Plays a chosen track.
+	void PlayFile(const QString& filePath);
+	//! Plays/pauses a track from the playlist.
+	void TogglePlayback();
 
 private:
 	//! Creates application actions.
@@ -43,15 +51,26 @@ private:
 	// Actions.
 	//
 
-	//! Exit the application.
+	//! File
+	QAction* mOpenFileAct;
 	QAction* mExitAct;
+	//! Settings.
+	QAction* mPreferecesAct;
+	//! Help
+	QAction* mAboutAct;
 
 	//
 	// Menu.
 	//
 
-	//! File.
 	QMenu* mFileMenu;
+	QMenu* mSettingsMenu;
+	QMenu* mHelpMenu;
+
+	// Playlist table view.
+	TableWgt* m_PlaylistTable;
+
+	bool state;
 };
 
 } // namespace splay
