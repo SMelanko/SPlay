@@ -5,6 +5,9 @@
 
 #include <QTableWidget>
 
+namespace splay
+{
+
 class TableWgt : public QTableWidget
 {
 	Q_OBJECT
@@ -16,20 +19,28 @@ public:
 	~TableWgt();
 
 protected:
+	//! Receives key press events for the widget.
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
-	bool dropMimeData(int row, int column, const QMimeData *data, Qt::DropAction action) Q_DECL_OVERRIDE;
 
-private slots:
+	private slots:
+	//! Handles mouse double click on a table row.
 	void OnDoubleCkick(QTableWidgetItem* item);
+	//! Handles a section (table header) clicking.
 	void OnSectionClicked(int index);
+	//! Handles a section (table header) resizing.
 	void OnSectionResized(int logicalIndex, int oldSize, int newSize);
 
 private:
-	QString Qss();
+	//! Creates custom style sheet for the widget.
+	QString _Qss();
 
 private:
-	int m_rowCnt;
-	bool m_sectionResized;
+	//! Count of the rows.
+	int mRowCnt;
+	//! ...
+	bool mSectionResized;
 };
+
+} // namespace splay
 
 #endif // _SPLAY_TABLE_WGT_H_

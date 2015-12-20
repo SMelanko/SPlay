@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget* parent)
 	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setToolTip(tr("Play"));
-	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::TogglePlayback);
+	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
 	al->addWidget(mPlayBtn);
 	al->addSpacing(15);
 
@@ -80,14 +80,14 @@ MainWindow::~MainWindow()
 {
 }
 
-void MainWindow::PlayFile(const QString& filePath)
+void MainWindow::OnPlayFile(const QString& filePath)
 {
 	state = true;
 	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 }
 
-void MainWindow::TogglePlayback()
+void MainWindow::OnTogglePlayback()
 {
 	if (state) {
 		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
@@ -114,7 +114,7 @@ void MainWindow::_CreateActions()
 			this, tr("Open file"), dir, tr("MP3 files (*.mp3);;All files (*.*)"));
 
 		if (!filePath.isEmpty()) {
-			PlayFile(filePath);
+			OnPlayFile(filePath);
 		}
 	});
 

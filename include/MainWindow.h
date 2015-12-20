@@ -10,10 +10,10 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 
-class TableWgt;
-
 namespace splay
 {
+
+class TableWgt;
 
 class MainWindow : public QMainWindow
 {
@@ -27,9 +27,9 @@ public:
 
 public slots:
 	//! Plays a chosen track.
-	void PlayFile(const QString& filePath);
+	void OnPlayFile(const QString& filePath);
 	//! Plays/pauses a track from the playlist.
-	void TogglePlayback();
+	void OnTogglePlayback();
 
 private:
 	//! Creates application actions.
