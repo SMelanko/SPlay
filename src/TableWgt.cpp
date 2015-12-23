@@ -2,6 +2,7 @@
 
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QMimeData>
 #include <QDebug>
 
 namespace splay
@@ -9,7 +10,6 @@ namespace splay
 
 TableWgt::TableWgt(QWidget* parent)
 	: QTableWidget(parent)
-	, mRowCnt(false)
 	, mSectionResized(false)
 {
 	// Set the size policy of the widget to horizontal and vertical.
@@ -40,17 +40,18 @@ TableWgt::TableWgt(QWidget* parent)
 	//
 	// TODO Drag and drop.
 	//
+	// Enable drop events in the current widget area.
 	setDragEnabled(true);
-	viewport()->setAcceptDrops(true);
-	setDefaultDropAction(Qt::TargetMoveAction);
-	setDragDropMode(QAbstractItemView::DragDrop);
-	setDragDropOverwriteMode(false);
-	setDropIndicatorShown(true);
+	setAcceptDrops(true);
+	//setDefaultDropAction(Qt::TargetMoveAction);
+	//setDragDropMode(QAbstractItemView::DragDrop);
+	//setDragDropOverwriteMode(false);
+	//setDropIndicatorShown(true);
 
 	//
 	// TODO Only for test.
 	//
-	insertRow(mRowCnt++);
+	insertRow(rowCount());
 	QTableWidgetItem* playing = new QTableWidgetItem(">");
 	playing->setTextAlignment(Qt::AlignCenter);
 	this->setItem(0, 0, playing);
@@ -58,12 +59,12 @@ TableWgt::TableWgt(QWidget* parent)
 	this->setItem(0, 2, new QTableWidgetItem("Shivers"));
 	this->setItem(0, 3, new QTableWidgetItem("05:22"));
 
-	this->insertRow(mRowCnt++);
+	this->insertRow(rowCount());
 	this->setItem(1, 1, new QTableWidgetItem("Aruna with Mark Etenson"));
 	this->setItem(1, 2, new QTableWidgetItem("Let go (Nic Chagall remix)"));
 	this->setItem(1, 3, new QTableWidgetItem("08:30"));
 
-	this->insertRow(mRowCnt++);
+	this->insertRow(rowCount());
 	this->setItem(2, 1, new QTableWidgetItem("Photographer & Susana"));
 	this->setItem(2, 2, new QTableWidgetItem("Find A Way"));
 	this->setItem(2, 3, new QTableWidgetItem("05:01"));
@@ -75,6 +76,46 @@ TableWgt::TableWgt(QWidget* parent)
 
 TableWgt::~TableWgt()
 {
+}
+
+void TableWgt::dragEnterEvent(QDragEnterEvent* event)
+{
+	qDebug() << "Drag enter event";
+	event->acceptProposedAction();
+}
+
+void TableWgt::dragLeaveEvent(QDragLeaveEvent* event)
+{
+	qDebug() << "Drag leave event";
+	event->accept();
+}
+
+void TableWgt::dragMoveEvent(QDragMoveEvent* event)
+{
+	qDebug() << "Drag move event";
+	event->acceptProposedAction();
+}
+
+void TableWgt::dropEvent(QDropEvent* event)
+{
+	qDebug() << "Drop event";
+	const QMimeData* mimeData = event->mimeData();
+	auto urlList = mimeData->urls();
+	for (const auto& url : urlList)
+		qDebug() << url.fileName();
+	event->acceptProposedAction();
+}
+
+void TableWgt::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+		qDebug() << "Key_Enter starts play current track " << currentRow();
+	else if (event->key() == Qt::Key_Delete)
+		qDebug() << "Key_Delete Delete track from play list " << currentRow();
+	else if (event->key() == Qt::Key_Space)
+		qDebug() << "Key_Space Pause " << currentRow();
+	else
+		QTableWidget::keyPressEvent(event);
 }
 
 void TableWgt::OnDoubleCkick(QTableWidgetItem* item)
@@ -107,18 +148,6 @@ void TableWgt::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// Set flag in true
 	// Then user closes program, app will check this flag
 	// and if it is true, will save new section settings.
-}
-
-void TableWgt::keyPressEvent(QKeyEvent* event)
-{
-	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-		qDebug() << "Key_Enter starts play current track " << currentRow();
-	else if (event->key() == Qt::Key_Delete)
-		qDebug() << "Key_Delete Delete track from play list " << currentRow();
-	else if (event->key() == Qt::Key_Space)
-		qDebug() << "Key_Space Pause " << currentRow();
-	else
-		QTableWidget::keyPressEvent(event);
 }
 
 QString TableWgt::_Qss()

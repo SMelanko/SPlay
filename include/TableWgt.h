@@ -19,6 +19,14 @@ public:
 	~TableWgt();
 
 protected:
+	//! Handles event that is sent to the current widget when a drag action enters it.
+	void dragEnterEvent(QDragEnterEvent* event) Q_DECL_OVERRIDE;
+	//! Handles event that is sent to the current widget when a drag action leaves it.
+	void dragLeaveEvent(QDragLeaveEvent* event) Q_DECL_OVERRIDE;
+	//! Handles event when a drag action is in progress.
+	void dragMoveEvent(QDragMoveEvent* event) Q_DECL_OVERRIDE;
+	//! Handles event when a drag and drop action is completed.
+	void dropEvent(QDropEvent* event) Q_DECL_OVERRIDE;
 	//! Receives key press events for the widget.
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
@@ -35,8 +43,6 @@ private:
 	QString _Qss();
 
 private:
-	//! Count of the rows.
-	int mRowCnt;
 	//! ...
 	bool mSectionResized;
 };
