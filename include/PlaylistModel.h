@@ -3,11 +3,11 @@
 #ifndef _SPLAY_PLAYLIST_MODEL_H_
 #define _SPLAY_PLAYLIST_MODEL_H_
 
+#include "Track.h"
+
 #include <QAbstractTableModel>
 
 #include <vector>
-
-#include "Track.h"
 
 namespace splay
 {

@@ -1,4 +1,4 @@
-#include "TableWgt.h"
+#include "PlaylistView.h"
 
 #include <QHeaderView>
 #include <QKeyEvent>
@@ -101,7 +101,7 @@ void PlaylistView::dropEvent(QDropEvent* event)
 	const QMimeData* mimeData = event->mimeData();
 	auto urlList = mimeData->urls();
 	for (const auto& url : urlList)
-		qDebug() << url.fileName();
+		qDebug() << url.path();
 	event->acceptProposedAction();
 }
 

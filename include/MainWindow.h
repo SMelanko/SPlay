@@ -59,6 +59,7 @@ private:
 	QAction* mPreferecesAct;
 	//! Help
 	QAction* mAboutAct;
+	QAction* mAboutQtAct;
 
 	//
 	// Menu.

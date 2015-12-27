@@ -3,6 +3,7 @@
 #include "PlaylistView.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QBoxLayout>
 #include <QFileDialog>
 #include <QMenuBar>
@@ -134,7 +135,11 @@ void MainWindow::_CreateActions()
 
 	mAboutAct = new QAction{ tr("&About"), this };
 	//mPrefereces->setShortcut
-	mAboutAct->setStatusTip(tr("About SPlay"));
+	mAboutAct->setStatusTip(tr("Show the SPlay's About box"));
+
+	mAboutQtAct = new QAction{ tr("About &Qt"), this };
+	mAboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+	connect(mAboutQtAct, &QAction::triggered, qApp, &QApplication::aboutQt);
 }
 
 void MainWindow::_CreateMenu()
@@ -149,6 +154,7 @@ void MainWindow::_CreateMenu()
 
 	mHelpMenu = menuBar()->addMenu(tr("&Help"));
 	mHelpMenu->addAction(mAboutAct);
+	mHelpMenu->addAction(mAboutQtAct);
 }
 
 } // namespace splay
