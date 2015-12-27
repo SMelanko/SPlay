@@ -14,8 +14,6 @@ PlaylistView::PlaylistView(QWidget* parent)
 {
 	// Set the size policy of the widget to horizontal and vertical.
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	// Set the horizontal header labels.
-	//setHorizontalHeaderLabels(QString{ "Playing;Author;Title;Duration" }.split(";"));
 	// Set additional parameters to the horizontal header.
 	horizontalHeader()->setVisible(true);
 	horizontalHeader()->setHighlightSections(false);
@@ -41,33 +39,9 @@ PlaylistView::PlaylistView(QWidget* parent)
 	// Enable drop events in the current widget area.
 	setDragEnabled(true);
 	setAcceptDrops(true);
-	//setDefaultDropAction(Qt::TargetMoveAction);
-	//setDragDropMode(QAbstractItemView::DragDrop);
-	//setDragDropOverwriteMode(false);
-	//setDropIndicatorShown(true);
+	setDragDropMode(QTableView::InternalMove);
+	setDropIndicatorShown(true);
 
-	//
-	// TODO Only for test.
-	//
-#if 0
-	insertRow(rowCount());
-	QTableWidgetItem* playing = new QTableWidgetItem(">");
-	playing->setTextAlignment(Qt::AlignCenter);
-	this->setItem(0, 0, playing);
-	this->setItem(0, 1, new QTableWidgetItem("Armin van Buuren"));
-	this->setItem(0, 2, new QTableWidgetItem("Shivers"));
-	this->setItem(0, 3, new QTableWidgetItem("05:22"));
-
-	this->insertRow(rowCount());
-	this->setItem(1, 1, new QTableWidgetItem("Aruna with Mark Etenson"));
-	this->setItem(1, 2, new QTableWidgetItem("Let go (Nic Chagall remix)"));
-	this->setItem(1, 3, new QTableWidgetItem("08:30"));
-
-	this->insertRow(rowCount());
-	this->setItem(2, 1, new QTableWidgetItem("Photographer & Susana"));
-	this->setItem(2, 2, new QTableWidgetItem("Find A Way"));
-	this->setItem(2, 3, new QTableWidgetItem("05:01"));
-#endif
 	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkick);
 	connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &PlaylistView::OnSectionClicked);
 	connect(horizontalHeader(), &QHeaderView::sectionResized, this, &PlaylistView::OnSectionResized);
