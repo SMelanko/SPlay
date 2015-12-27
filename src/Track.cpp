@@ -1,5 +1,7 @@
 #include "Track.h"
 
+#include <cstdint> // For VS.
+
 namespace splay
 {
 
