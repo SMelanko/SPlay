@@ -42,7 +42,9 @@ set(INCLUDE_LIST
 	include/Common.h
 	include/Logger.h
 	include/MainWindow.h
-	include/TableWgt.h)
+	include/PlaylistModel.h
+	include/PlaylistView.h
+	include/Track.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)
@@ -52,7 +54,9 @@ set(SRC_LIST
 	src/Logger.cpp
 	src/main.cpp
 	src/MainWindow.cpp
-	src/TableWgt.cpp)
+	src/PlaylistModel.cpp
+	src/PlaylistView.cpp
+	src/Track.cpp)
 
 set(cppformat_SRC_LIST
 	src/cppformat/format.cc)
@@ -60,7 +64,8 @@ set(cppformat_SRC_LIST
 qt5_wrap_cpp(MOC_SRC_LIST
 	include/Application.h
 	include/MainWindow.h
-	include/TableWgt.h)
+	include/PlaylistModel.h
+	include/PlaylistView.h)
 
 qt5_add_resources(RES_LIST
 	res/SPlay.qrc)

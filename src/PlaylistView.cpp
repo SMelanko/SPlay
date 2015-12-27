@@ -8,16 +8,14 @@
 namespace splay
 {
 
-TableWgt::TableWgt(QWidget* parent)
-	: QTableWidget(parent)
+PlaylistView::PlaylistView(QWidget* parent)
+	: QTableView(parent)
 	, mSectionResized(false)
 {
 	// Set the size policy of the widget to horizontal and vertical.
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	// Set the number of columns.
-	setColumnCount(4);
 	// Set the horizontal header labels.
-	setHorizontalHeaderLabels(QString{ "Playing;Author;Title;Duration" }.split(";"));
+	//setHorizontalHeaderLabels(QString{ "Playing;Author;Title;Duration" }.split(";"));
 	// Set additional parameters to the horizontal header.
 	horizontalHeader()->setVisible(true);
 	horizontalHeader()->setHighlightSections(false);
@@ -27,7 +25,7 @@ TableWgt::TableWgt(QWidget* parent)
 	verticalHeader()->setDefaultSectionSize(23);
 	setVerticalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
 	// Set custom widget style sheet.
-	setStyleSheet(_Qss());
+	//setStyleSheet(_Qss());
 	// Disable possibility for editing rows.
 	setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 	// Alternate background color in the table.
@@ -51,6 +49,7 @@ TableWgt::TableWgt(QWidget* parent)
 	//
 	// TODO Only for test.
 	//
+#if 0
 	insertRow(rowCount());
 	QTableWidgetItem* playing = new QTableWidgetItem(">");
 	playing->setTextAlignment(Qt::AlignCenter);
@@ -68,35 +67,35 @@ TableWgt::TableWgt(QWidget* parent)
 	this->setItem(2, 1, new QTableWidgetItem("Photographer & Susana"));
 	this->setItem(2, 2, new QTableWidgetItem("Find A Way"));
 	this->setItem(2, 3, new QTableWidgetItem("05:01"));
-
-	connect(this, &QTableWidget::itemDoubleClicked, this, &TableWgt::OnDoubleCkick);
-	connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &TableWgt::OnSectionClicked);
-	connect(horizontalHeader(), &QHeaderView::sectionResized, this, &TableWgt::OnSectionResized);
+#endif
+	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkick);
+	connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &PlaylistView::OnSectionClicked);
+	connect(horizontalHeader(), &QHeaderView::sectionResized, this, &PlaylistView::OnSectionResized);
 }
 
-TableWgt::~TableWgt()
+PlaylistView::~PlaylistView()
 {
 }
 
-void TableWgt::dragEnterEvent(QDragEnterEvent* event)
+void PlaylistView::dragEnterEvent(QDragEnterEvent* event)
 {
 	qDebug() << "Drag enter event";
 	event->acceptProposedAction();
 }
 
-void TableWgt::dragLeaveEvent(QDragLeaveEvent* event)
+void PlaylistView::dragLeaveEvent(QDragLeaveEvent* event)
 {
 	qDebug() << "Drag leave event";
 	event->accept();
 }
 
-void TableWgt::dragMoveEvent(QDragMoveEvent* event)
+void PlaylistView::dragMoveEvent(QDragMoveEvent* event)
 {
 	qDebug() << "Drag move event";
 	event->acceptProposedAction();
 }
 
-void TableWgt::dropEvent(QDropEvent* event)
+void PlaylistView::dropEvent(QDropEvent* event)
 {
 	qDebug() << "Drop event";
 	const QMimeData* mimeData = event->mimeData();
@@ -106,34 +105,34 @@ void TableWgt::dropEvent(QDropEvent* event)
 	event->acceptProposedAction();
 }
 
-void TableWgt::keyPressEvent(QKeyEvent* event)
+void PlaylistView::keyPressEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-		qDebug() << "Key_Enter starts play current track " << currentRow();
+		qDebug() << "Key_Enter starts play current track " << currentIndex().row();
 	else if (event->key() == Qt::Key_Delete)
-		qDebug() << "Key_Delete Delete track from play list " << currentRow();
+		qDebug() << "Key_Delete Delete track from play list " << currentIndex().row();
 	else if (event->key() == Qt::Key_Space)
-		qDebug() << "Key_Space Pause " << currentRow();
+		qDebug() << "Key_Space Pause " << currentIndex().row();
 	else
-		QTableWidget::keyPressEvent(event);
+		QTableView::keyPressEvent(event);
 }
 
-void TableWgt::OnDoubleCkick(QTableWidgetItem* item)
+void PlaylistView::OnDoubleCkick(const QModelIndex& index)
 {
 	// Get current track.
 	// Delete playing indicator.
-	qDebug() << "Row = " << item->row();
+	qDebug() << "Row = " << index.row();
 	//QTableWidgetItem* playing = new QTableWidgetItem(">");
 	//playing->setTextAlignment(Qt::AlignCenter);
 	//this->setItem(item->row(), 0, playing);
 }
 
-void TableWgt::OnSectionClicked(int index)
+void PlaylistView::OnSectionClicked(int index)
 {
 	qDebug() << "TableWgt::OnHeaderClicked index = " << index;
 }
 
-void TableWgt::OnSectionResized(int logicalIndex, int oldSize, int newSize)
+void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 {
 	if (!mSectionResized)
 		mSectionResized = true;
@@ -150,7 +149,7 @@ void TableWgt::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// and if it is true, will save new section settings.
 }
 
-QString TableWgt::_Qss()
+QString PlaylistView::_Qss()
 {
 	return QString(
 		"QHeaderView {"

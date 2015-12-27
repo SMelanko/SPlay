@@ -1,22 +1,22 @@
 #pragma once
 
-#ifndef _SPLAY_TABLE_WGT_H_
-#define _SPLAY_TABLE_WGT_H_
+#ifndef _SPLAY_PLAYLIST_VIEW_H_
+#define _SPLAY_PLAYLIST_VIEW_H_
 
-#include <QTableWidget>
+#include <QTableView>
 
 namespace splay
 {
 
-class TableWgt : public QTableWidget
+class PlaylistView : public QTableView
 {
 	Q_OBJECT
 
 public:
 	//! Constructor.
-	explicit TableWgt(QWidget* parent = Q_NULLPTR);
+	explicit PlaylistView(QWidget* parent = Q_NULLPTR);
 	//! Destructor.
-	~TableWgt();
+	~PlaylistView();
 
 protected:
 	//! Handles event that is sent to the current widget when a drag action enters it.
@@ -30,9 +30,9 @@ protected:
 	//! Receives key press events for the widget.
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
-	private slots:
+private Q_SLOTS:
 	//! Handles mouse double click on a table row.
-	void OnDoubleCkick(QTableWidgetItem* item);
+	void OnDoubleCkick(const QModelIndex& index);
 	//! Handles a section (table header) clicking.
 	void OnSectionClicked(int index);
 	//! Handles a section (table header) resizing.
@@ -49,4 +49,4 @@ private:
 
 } // namespace splay
 
-#endif // _SPLAY_TABLE_WGT_H_
+#endif // _SPLAY_PLAYLIST_VIEW_H_

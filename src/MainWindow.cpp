@@ -1,5 +1,6 @@
 #include "MainWindow.h"
-#include "TableWgt.h"
+#include "PlaylistModel.h"
+#include "PlaylistView.h"
 
 #include <QAction>
 #include <QBoxLayout>
@@ -68,8 +69,11 @@ MainWindow::MainWindow(QWidget* parent)
 	mPosSldr->setToolTip(tr("Seek"));
 	ml->addWidget(mPosSldr);
 
-	m_PlaylistTable = new TableWgt{ this };
-	ml->addWidget(m_PlaylistTable);
+	mPlayModel = new PlaylistModel{};
+	mPlayView = new PlaylistView{ this };
+	mPlayView->setModel(mPlayModel);
+
+	ml->addWidget(mPlayView);
 
 	centralWidget()->setLayout(ml);
 
@@ -78,6 +82,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+	delete mPlayModel;
 }
 
 void MainWindow::OnPlayFile(const QString& filePath)

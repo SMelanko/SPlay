@@ -13,7 +13,8 @@ QT_FORWARD_DECLARE_CLASS(QSlider)
 namespace splay
 {
 
-class TableWgt;
+class PlaylistModel;
+class PlaylistView;
 
 class MainWindow : public QMainWindow
 {
@@ -67,8 +68,10 @@ private:
 	QMenu* mSettingsMenu;
 	QMenu* mHelpMenu;
 
-	// Playlist table view.
-	TableWgt* m_PlaylistTable;
+	//! Playlist table model.
+	PlaylistModel* mPlayModel;
+	//! Playlist table view.
+	PlaylistView* mPlayView;
 
 	bool state;
 };
