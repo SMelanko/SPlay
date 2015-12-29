@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget* parent)
 	mPlayModel = new PlaylistModel{};
 	mPlayView = new PlaylistView{ this };
 	mPlayView->setModel(mPlayModel);
+	connect(mPlayView, &PlaylistView::Insert, mPlayModel, &PlaylistModel::Insert);
 
 	ml->addWidget(mPlayView);
 
@@ -98,13 +99,13 @@ void MainWindow::OnTogglePlayback()
 	if (state) {
 		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
 		mPlayBtn->setIconSize(QSize{ 40, 40 });
+		state = false;
 	}
 	else {
 		mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 		mPlayBtn->setIconSize(QSize{ 40, 40 });
+		state = true;
 	}
-
-	state = !state;
 }
 
 void MainWindow::_CreateActions()

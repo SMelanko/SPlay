@@ -44,10 +44,7 @@ struct Data
 int main(int argc, char** argv)
 {
 	try {
-		SPLAY_LOG_INFO("Init");
-
 		splay::Application a{ argc, argv };
-
 		return a.exec();
 	}
 	catch (const std::exception exc) {

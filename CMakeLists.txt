@@ -44,7 +44,8 @@ set(INCLUDE_LIST
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
-	include/Track.h)
+	include/Track.h
+	include/Types.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)

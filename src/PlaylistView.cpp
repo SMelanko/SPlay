@@ -1,9 +1,12 @@
 #include "PlaylistView.h"
+#include "Track.h"
 
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QMimeData>
 #include <QDebug>
+
+#include <vector>
 
 namespace splay
 {
@@ -15,12 +18,15 @@ PlaylistView::PlaylistView(QWidget* parent)
 	// Set the size policy of the widget to horizontal and vertical.
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	// Set additional parameters to the horizontal header.
-	horizontalHeader()->setVisible(true);
-	horizontalHeader()->setHighlightSections(false);
+	auto hh = horizontalHeader();
+	hh->setHighlightSections(false);
+	hh->setSectionsMovable(true);
+	hh->setVisible(true);
 	setHorizontalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
 	// Set additional parameters to the vertical header.
-	verticalHeader()->setVisible(false);
-	verticalHeader()->setDefaultSectionSize(23);
+	auto vh = verticalHeader();
+	vh->setVisible(false);
+	vh->setDefaultSectionSize(23);
 	setVerticalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
 	// Set custom widget style sheet.
 	//setStyleSheet(_Qss());
@@ -53,57 +59,72 @@ PlaylistView::~PlaylistView()
 
 void PlaylistView::dragEnterEvent(QDragEnterEvent* event)
 {
-	qDebug() << "Drag enter event";
+	qDebug() << "PlaylistView::dragEnterEvent";
 	event->acceptProposedAction();
 }
 
 void PlaylistView::dragLeaveEvent(QDragLeaveEvent* event)
 {
-	qDebug() << "Drag leave event";
+	qDebug() << "PlaylistView::dragLeaveEvent";
 	event->accept();
-}
-
-void PlaylistView::dragMoveEvent(QDragMoveEvent* event)
-{
-	qDebug() << "Drag move event";
-	event->acceptProposedAction();
 }
 
 void PlaylistView::dropEvent(QDropEvent* event)
 {
-	qDebug() << "Drop event";
-	const QMimeData* mimeData = event->mimeData();
-	auto urlList = mimeData->urls();
-	for (const auto& url : urlList)
-		qDebug() << url.path();
-	event->acceptProposedAction();
+	if (event->mimeData()->hasFormat("application/splay-track")) {
+		qDebug() << "PlaylistView::dropEvent: internal drop event";
+		QByteArray data = event->mimeData()->data("application/splay-track");
+		QDataStream stream(&data, QIODevice::ReadOnly);
+		QStringList text;
+		stream >> text;
+
+		//foreach(const auto& val, text)
+		//	qDebug() << val;
+
+		event->setDropAction(Qt::MoveAction);
+		event->accept();
+	}
+	else {
+		qDebug() << "PlaylistView::dropEvent: external drop event";
+		const QMimeData* mimeData = event->mimeData();
+		auto urlList = mimeData->urls();
+		Playlist list;
+		for (const auto& url : urlList) {
+			list.push_back(Track(url.fileName(), "Unknown", 123));
+			qDebug() << url.path();
+		}
+		event->acceptProposedAction();
+
+		Q_EMIT Insert(list);
+	}
 }
 
 void PlaylistView::keyPressEvent(QKeyEvent* event)
 {
-	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-		qDebug() << "Key_Enter starts play current track " << currentIndex().row();
-	else if (event->key() == Qt::Key_Delete)
-		qDebug() << "Key_Delete Delete track from play list " << currentIndex().row();
-	else if (event->key() == Qt::Key_Space)
-		qDebug() << "Key_Space Pause " << currentIndex().row();
-	else
+	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+		qDebug() << "PlaylistView::keyPressEvent: play " << currentIndex().row();
+	}
+	else if (event->key() == Qt::Key_Delete) {
+		qDebug() << "PlaylistView::keyPressEvent: delete " << currentIndex().row();
+	}
+	else if (event->key() == Qt::Key_Space) {
+		qDebug() << "PlaylistView::keyPressEvent: pause " << currentIndex().row();
+	}
+	else {
 		QTableView::keyPressEvent(event);
+	}
 }
 
 void PlaylistView::OnDoubleCkick(const QModelIndex& index)
 {
 	// Get current track.
 	// Delete playing indicator.
-	qDebug() << "Row = " << index.row();
-	//QTableWidgetItem* playing = new QTableWidgetItem(">");
-	//playing->setTextAlignment(Qt::AlignCenter);
-	//this->setItem(item->row(), 0, playing);
+	qDebug() << "PlaylistView::OnDoubleCkick: row = " << index.row();
 }
 
 void PlaylistView::OnSectionClicked(int index)
 {
-	qDebug() << "TableWgt::OnHeaderClicked index = " << index;
+	qDebug() << "PlaylistView::OnSectionClicked: index = " << index;
 }
 
 void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
@@ -112,7 +133,7 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 		mSectionResized = true;
 
 	// Save table settings
-	qDebug() << "TableWgt::OnSectionResized section has been resized"
+	qDebug() << "PlaylistView::OnSectionResized: "
 		<< " index = " << logicalIndex
 		<< " oldSize = " << oldSize
 		<< " newSize = " << newSize

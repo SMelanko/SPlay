@@ -1,7 +1,8 @@
 #include "PlaylistModel.h"
-#include "Track.h"
 
+#include <QDataStream>
 #include <QDebug>
+#include <QMimeData>
 
 namespace splay
 {
@@ -9,6 +10,7 @@ namespace splay
 PlaylistModel::PlaylistModel(QObject* parent)
 	: QAbstractTableModel(parent)
 {
+	// TODO only for testing.
 	mPlaylist.emplace_back("Armin van Buuren", "Shivers", 3721);
 	mPlaylist.emplace_back("Aruna with Mark Etenson", "Let go (Nic Chagall remix)", 510);
 	mPlaylist.emplace_back("Photographer & Susana", "Find A Way", 201);
@@ -16,16 +18,23 @@ PlaylistModel::PlaylistModel(QObject* parent)
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
 {
-	return 4;
+	// Note! When implementing a table based model,
+	// columnCount() should return 0 when the parent is valid.
+	if (parent.isValid())
+		 return 0;
+	 else
+		 return 4;
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 {
+	if (!index.isValid())
+		return QVariant();
+
 	const auto row(index.row());
 	const auto column(index.column());
 
 	if (role == Qt::DisplayRole) {
-		QString data(QString("Row = %1 Column = %2").arg(row).arg(column));
 		switch (column) {
 		case 1:
 			return QVariant(mPlaylist[row].Author());
@@ -69,9 +78,57 @@ QVariant PlaylistModel::headerData(int section, Qt::Orientation orientation, int
 	return QVariant();
 }
 
+void PlaylistModel::Insert(const Playlist list)
+{
+	const QModelIndex parent = QModelIndex();
+	const auto row = mPlaylist.size();
+	const auto cnt = list.size();
+
+	beginInsertRows(parent, row, row + cnt - 1);
+
+	foreach (const auto& track, list) {
+		mPlaylist.push_back(track);
+	}
+
+	endInsertRows();
+}
+
+QMimeData* PlaylistModel::mimeData(const QModelIndexList& indexes) const
+{
+	QMimeData* mime(new QMimeData);
+	QByteArray encodedData;
+
+	QDataStream stream(&encodedData, QIODevice::WriteOnly);
+
+	foreach(QModelIndex index, indexes) {
+		if (index.isValid()) {
+			QString text(data(index, Qt::DisplayRole).toString());
+			qDebug() << text;
+			stream << text;
+		}
+	}
+
+	mime->setData("application/splay-track", encodedData);
+
+	return mime;
+}
+
+QStringList PlaylistModel::mimeTypes() const
+{
+	QStringList types;
+	types << "application/splay-track";
+	//qDebug() << "PlaylistModel::mimeTypes" << types;
+	return types;
+}
+
 int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
-	return mPlaylist.size();
+	// Note! When implementing a table based model,
+	// rowCount() should return 0 when the parent is valid.
+	if (parent.isValid())
+		return 0;
+	else
+		return mPlaylist.size();
 }
 
 Qt::DropActions PlaylistModel::supportedDropActions() const
