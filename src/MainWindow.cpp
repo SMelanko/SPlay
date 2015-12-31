@@ -73,7 +73,8 @@ MainWindow::MainWindow(QWidget* parent)
 	mPlayModel = new PlaylistModel{};
 	mPlayView = new PlaylistView{ this };
 	mPlayView->setModel(mPlayModel);
-	connect(mPlayView, &PlaylistView::Insert, mPlayModel, &PlaylistModel::Insert);
+	connect(mPlayView, &PlaylistView::Insert, mPlayModel, &PlaylistModel::OnInsert);
+	connect(mPlayView, &PlaylistView::Move, mPlayModel, &PlaylistModel::OnMove);
 
 	ml->addWidget(mPlayView);
 

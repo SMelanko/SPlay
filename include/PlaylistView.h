@@ -23,7 +23,10 @@ public:
 	~PlaylistView();
 
 Q_SIGNALS:
-	void Insert(const Playlist list);
+	//! Emits signal for adding new tracks via drag and drop operation.
+	void Insert(QStringList list);
+	//! Emits signal when internal moving of the rows is executed.
+	void Move(const QVector<int> rows, int dest);
 
 protected:
 	//! Handles event that is sent to the current widget when a drag action enters it.
@@ -44,8 +47,10 @@ private Q_SLOTS:
 	void OnSectionResized(int logicalIndex, int oldSize, int newSize);
 
 private:
+	//! Returns a list of rows whose have been selected.
+	QVector<int> _GetSelectedRows() const NOEXCEPT;
 	//! Creates custom style sheet for the widget.
-	QString _Qss();
+	QString _Qss() const NOEXCEPT;
 
 private:
 	//! Checks if table header section has been resized.

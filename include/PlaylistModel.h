@@ -22,7 +22,9 @@ public:
 
 public Q_SLOTS:
 	//! Inserts tracks into the end of model.
-	void Insert(const Playlist list);
+	void OnInsert(QStringList list);
+	//! Executes internal moving of the rows.
+	void OnMove(QVector<int> rows, int dest);
 
 protected:
 	//! Returns the number of columns for the children of the given parent.

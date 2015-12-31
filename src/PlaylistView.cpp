@@ -46,7 +46,7 @@ PlaylistView::PlaylistView(QWidget* parent)
 	setDragEnabled(true);
 	setAcceptDrops(true);
 	setDragDropMode(QTableView::InternalMove);
-	setDropIndicatorShown(true);
+	//setDropIndicatorShown(true);
 
 	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkick);
 	connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &PlaylistView::OnSectionClicked);
@@ -71,28 +71,29 @@ void PlaylistView::dragLeaveEvent(QDragLeaveEvent* event)
 
 void PlaylistView::dropEvent(QDropEvent* event)
 {
-	if (event->mimeData()->hasFormat("application/splay-track")) {
+	if (event->mimeData()->hasFormat(QLatin1String("application/splay-track"))) {
 		qDebug() << "PlaylistView::dropEvent: internal drop event";
-		QByteArray data = event->mimeData()->data("application/splay-track");
-		QDataStream stream(&data, QIODevice::ReadOnly);
-		QStringList text;
-		stream >> text;
 
-		//foreach(const auto& val, text)
-		//	qDebug() << val;
+		const auto pos(event->pos());
+		const auto dest(indexAt(pos).row());
+
+		qDebug() << "PlaylistView::dropEvent: drop pos = " << pos << " dest = " << dest;
 
 		event->setDropAction(Qt::MoveAction);
 		event->accept();
+
+		Q_EMIT Move(_GetSelectedRows(), dest);
 	}
 	else {
 		qDebug() << "PlaylistView::dropEvent: external drop event";
-		const QMimeData* mimeData = event->mimeData();
-		auto urlList = mimeData->urls();
-		Playlist list;
+
+		QStringList list;
+		auto urlList = event->mimeData()->urls();
+
 		for (const auto& url : urlList) {
-			list.push_back(Track(url.fileName(), "Unknown", 123));
-			qDebug() << url.path();
+			list.push_back(url.fileName());
 		}
+
 		event->acceptProposedAction();
 
 		Q_EMIT Insert(list);
@@ -144,7 +145,19 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// and if it is true, will save new section settings.
 }
 
-QString PlaylistView::_Qss()
+QVector<int> PlaylistView::_GetSelectedRows() const NOEXCEPT
+{
+	QVector<int> selectedRows;
+	const auto indexes = selectionModel()->selectedRows();
+
+	for (const auto& index : indexes) {
+		selectedRows.push_back(index.row());
+	}
+
+	return selectedRows;
+}
+
+QString PlaylistView::_Qss() const NOEXCEPT
 {
 	return QString(
 		"QHeaderView {"

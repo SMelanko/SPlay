@@ -14,10 +14,13 @@ class Track
 {
 public:
 	//! Constructor.
-	Track() /* NOEXCEPT */ = default;
+	Track() NOEXCEPT = default;
 	Track(const QString& author, const QString& title, const int duration) NOEXCEPT;
 	//! Destructor.
-	~Track() /* NOEXCEPT */ = default;
+	~Track() NOEXCEPT = default;
+	//! Move.
+	//Track(Track&&) NOEXCEPT = default;
+	//Track& operator=(Track&&) NOEXCEPT = default;
 
 public:
 	//! Returns the author's name.

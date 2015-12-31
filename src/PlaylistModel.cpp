@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QMimeData>
 
+#include <memory>
+
 namespace splay
 {
 
@@ -11,9 +13,16 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	: QAbstractTableModel(parent)
 {
 	// TODO only for testing.
-	//mPlaylist.push_back(Track("Armin van Buuren", "Shivers", 3721));
-	//mPlaylist.push_back(Track("Aruna with Mark Etenson", "Let go (Nic Chagall remix)", 510));
-	//mPlaylist.push_back(Track("Photographer & Susana", "Find A Way", 201));
+	mPlaylist.emplace_back(Track("10 Markus Schulz feat. Delacey", "Destiny", 110));
+	mPlaylist.emplace_back(Track("9 Photographer & Susana", "Find A Way", 109));
+	mPlaylist.emplace_back(Track("8 MaRLo feat. Jano", "The Dreamers", 108));
+	mPlaylist.emplace_back(Track("7 Matt Darey feat. Kate Louise Smith", "See The Sun (Dan Stone Rework)", 107));
+	mPlaylist.emplace_back(Track("6 Above & Beyond feat. Zoe Johnston", "We're All We Need", 106));
+	mPlaylist.emplace_back(Track("5 Omnia feat. Tilde", "For The First Time", 105));
+	mPlaylist.emplace_back(Track("4 Armin van Buuren feat. Eric Vloeimans", "Embrace", 104));
+	mPlaylist.emplace_back(Track("3 Armin van Buuren pres. Rising Star feat. Betsie Larkin", "Safe Inside You", 103));
+	mPlaylist.emplace_back(Track("2 Armin van Buuren & Jean Michel-Jarre", "Stardust (Armin van Buuren pres. Rising Star Remix", 102));
+	mPlaylist.emplace_back(Track("1 Ferry Corsten pres. Gouryella", "Anahera", 101));
 }
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
@@ -78,21 +87,6 @@ QVariant PlaylistModel::headerData(int section, Qt::Orientation orientation, int
 	return QVariant();
 }
 
-void PlaylistModel::Insert(const Playlist list)
-{
-	const QModelIndex parent = QModelIndex();
-	const auto row = mPlaylist.size();
-	const auto cnt = list.size();
-
-	beginInsertRows(parent, row, row + cnt - 1);
-
-	foreach (const auto& track, list) {
-		mPlaylist.push_back(track);
-	}
-
-	endInsertRows();
-}
-
 QMimeData* PlaylistModel::mimeData(const QModelIndexList& indexes) const
 {
 	QMimeData* mime(new QMimeData);
@@ -117,8 +111,51 @@ QStringList PlaylistModel::mimeTypes() const
 {
 	QStringList types;
 	types << "application/splay-track";
-	//qDebug() << "PlaylistModel::mimeTypes" << types;
 	return types;
+}
+
+void PlaylistModel::OnInsert(QStringList list)
+{
+	const QModelIndex parent = QModelIndex();
+	const auto row = mPlaylist.size();
+	const auto cnt = list.size();
+
+	beginInsertRows(parent, row, row + cnt - 1);
+
+	for (const auto& path : list) {
+		mPlaylist.emplace_back(Track(path, "qwe", 123));
+	}
+
+	endInsertRows();
+}
+
+void PlaylistModel::OnMove(QVector<int> rows, int dest)
+{
+	qDebug() << "PlaylistModel::OnMove: rows " << rows << " dest = " << dest;
+
+	const QModelIndex parent = QModelIndex();
+	// Number of rows for the moving.
+	const auto num(rows.size());
+
+	beginMoveRows(parent, rows[0], rows[num - 1], parent, dest);
+
+	// Copy rows whose have been moved into the temporary vector.
+	Playlist tmp(num);
+	for (int i = 0; i < num; ++i) {
+		tmp[i] = mPlaylist[rows[i]];
+	}
+	// Delete moved rows from current playlist.
+	for (const auto& row : rows) {
+		mPlaylist.erase(std::begin(mPlaylist) + row);
+	}
+
+	if (dest > static_cast<int>(mPlaylist.size()))
+		dest = mPlaylist.size();
+
+	// Move rows to the destination.
+	mPlaylist.insert(std::begin(mPlaylist) + dest, std::begin(tmp), std::end(tmp));
+
+	endMoveRows();
 }
 
 int PlaylistModel::rowCount(const QModelIndex& parent) const
