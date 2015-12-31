@@ -5,12 +5,12 @@
 
 #include "Track.h"
 
-#include <vector>
+#include <QVector>
 
 namespace splay
 {
 
-using Playlist = std::vector<Track>;
+using Playlist = QVector<Track>;
 
 }
 

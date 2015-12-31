@@ -11,9 +11,9 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	: QAbstractTableModel(parent)
 {
 	// TODO only for testing.
-	mPlaylist.emplace_back("Armin van Buuren", "Shivers", 3721);
-	mPlaylist.emplace_back("Aruna with Mark Etenson", "Let go (Nic Chagall remix)", 510);
-	mPlaylist.emplace_back("Photographer & Susana", "Find A Way", 201);
+	//mPlaylist.push_back(Track("Armin van Buuren", "Shivers", 3721));
+	//mPlaylist.push_back(Track("Aruna with Mark Etenson", "Let go (Nic Chagall remix)", 510));
+	//mPlaylist.push_back(Track("Photographer & Susana", "Find A Way", 201));
 }
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
