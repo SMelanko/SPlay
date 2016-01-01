@@ -6,8 +6,6 @@
 #include <QMimeData>
 #include <QDebug>
 
-#include <vector>
-
 namespace splay
 {
 
@@ -106,7 +104,10 @@ void PlaylistView::keyPressEvent(QKeyEvent* event)
 		qDebug() << "PlaylistView::keyPressEvent: play " << currentIndex().row();
 	}
 	else if (event->key() == Qt::Key_Delete) {
-		qDebug() << "PlaylistView::keyPressEvent: delete " << currentIndex().row();
+		if (selectionModel()->hasSelection()) {
+			Q_EMIT Remove(_GetSelectedRows());
+			selectionModel()->clearSelection();
+		}
 	}
 	else if (event->key() == Qt::Key_Space) {
 		qDebug() << "PlaylistView::keyPressEvent: pause " << currentIndex().row();
@@ -145,16 +146,20 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// and if it is true, will save new section settings.
 }
 
-QVector<int> PlaylistView::_GetSelectedRows() const NOEXCEPT
+RowsList PlaylistView::_GetSelectedRows() const NOEXCEPT
 {
-	QVector<int> selectedRows;
+	RowsList selectedRows;
 	const auto indexes = selectionModel()->selectedRows();
 
 	for (const auto& index : indexes) {
 		selectedRows.push_back(index.row());
 	}
 
-	return selectedRows;
+	if (selectedRows.size() > 1) {
+		std::sort(selectedRows.begin(), selectedRows.end());
+	}
+
+	return std::move(selectedRows);
 }
 
 QString PlaylistView::_Qss() const NOEXCEPT

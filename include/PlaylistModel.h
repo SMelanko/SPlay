@@ -24,7 +24,9 @@ public Q_SLOTS:
 	//! Inserts tracks into the end of model.
 	void OnInsert(QStringList list);
 	//! Executes internal moving of the rows.
-	void OnMove(QVector<int> rows, int dest);
+	void OnMove(RowsList selectedRows, int dest);
+	//! Remove specified rows from view.
+	void OnRemove(RowsList selectedRows);
 
 protected:
 	//! Returns the number of columns for the children of the given parent.
@@ -46,7 +48,7 @@ protected:
 
 private:
 	//! Container of the specified audio files.
-	Playlist mPlaylist;
+	Playlist mData;
 };
 
 } // namespace splay

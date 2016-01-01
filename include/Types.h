@@ -11,8 +11,8 @@
 namespace splay
 {
 
-using TrackPtr = std::unique_ptr<Track>;
 using Playlist = std::vector<Track>;
+using RowsList = std::vector<int>;
 
 }
 
