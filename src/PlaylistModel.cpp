@@ -27,10 +27,7 @@ int PlaylistModel::columnCount(const QModelIndex& parent) const
 {
 	// Note! When implementing a table based model,
 	// columnCount() should return 0 when the parent is valid.
-	if (parent.isValid())
-		 return 0;
-	 else
-		 return 4;
+	return parent.isValid() ? 0 : 4;
 }
 
 QVariant PlaylistModel::data(const QModelIndex& index, int role) const
@@ -88,26 +85,6 @@ QVariant PlaylistModel::headerData(int section, Qt::Orientation orientation, int
 	}
 
 	return QVariant();
-}
-
-QMimeData* PlaylistModel::mimeData(const QModelIndexList& indexes) const
-{
-	QMimeData* mime(new QMimeData);
-	QByteArray encodedData;
-
-	QDataStream stream(&encodedData, QIODevice::WriteOnly);
-
-	foreach(QModelIndex index, indexes) {
-		if (index.isValid()) {
-			QString text(data(index, Qt::DisplayRole).toString());
-			qDebug() << text;
-			stream << text;
-		}
-	}
-
-	mime->setData("application/splay-track", encodedData);
-
-	return mime;
 }
 
 QStringList PlaylistModel::mimeTypes() const
@@ -197,10 +174,7 @@ int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
 	// Note! When implementing a table based model,
 	// rowCount() should return 0 when the parent is valid.
-	if (parent.isValid())
-		return 0;
-	else
-		return mData.size();
+	return parent.isValid() ? 0 : mData.size();
 }
 
 Qt::DropActions PlaylistModel::supportedDropActions() const

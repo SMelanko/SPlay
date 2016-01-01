@@ -15,6 +15,7 @@ namespace splay
 
 class PlaylistModel;
 class PlaylistView;
+class VolumeButton;
 
 class MainWindow : public QMainWindow
 {
@@ -49,6 +50,8 @@ private:
 	QAbstractButton* mForwardBtn;
 	//! Seek slider.
 	QSlider* mPosSldr;
+	//! Volume button.
+	VolumeButton* mVolBtn;
 
 	//
 	// Actions.

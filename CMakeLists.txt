@@ -45,7 +45,8 @@ set(INCLUDE_LIST
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/Track.h
-	include/Types.h)
+	include/Types.h
+	include/VolumeButton.h)
 
 set(cppformat_INCLUDE_LIST
 	include/cppformat/format.h)
@@ -57,7 +58,8 @@ set(SRC_LIST
 	src/MainWindow.cpp
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
-	src/Track.cpp)
+	src/Track.cpp
+	src/VolumeButton.cpp)
 
 set(cppformat_SRC_LIST
 	src/cppformat/format.cc)
@@ -66,7 +68,8 @@ qt5_wrap_cpp(MOC_SRC_LIST
 	include/Application.h
 	include/MainWindow.h
 	include/PlaylistModel.h
-	include/PlaylistView.h)
+	include/PlaylistView.h
+	include/VolumeButton.h)
 
 qt5_add_resources(RES_LIST
 	res/SPlay.qrc)

@@ -37,8 +37,6 @@ protected:
 	Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
 	//! Returns the data for the given role and section in the header with the specified orientation.
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-	//! Returns an object that contains serialized items of data corresponding to the list of indexes specified.
-	QMimeData* mimeData(const QModelIndexList& indexes) const Q_DECL_OVERRIDE;
 	//! Returns the list of allowed MIME types.
 	QStringList mimeTypes() const Q_DECL_OVERRIDE;
 	//! Returns the number of rows under the given parent.

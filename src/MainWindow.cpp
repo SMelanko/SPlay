@@ -1,11 +1,13 @@
 #include "MainWindow.h"
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
+#include "VolumeButton.h"
 
 #include <QAction>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QFileDialog>
+#include <QLabel>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QSlider>
@@ -99,6 +101,12 @@ void MainWindow::_CreateCentralWgt()
 
 	QBoxLayout* al{ new QHBoxLayout };
 
+	mVolBtn = new VolumeButton(this);
+	mVolBtn->setToolTip(tr("Adjust volume"));
+	mVolBtn->SetVolume(30);//mediaPlayer.volume());
+	//connect(mVolBtn, &VolumeButton::volumeChanged, &mediaPlayer, &QMediaPlayer::setVolume);
+	al->addWidget(mVolBtn);
+
 	al->addStretch(1);
 	mBackwardBtn = new QPushButton{ this };
 	mBackwardBtn->setEnabled(true);
@@ -127,6 +135,12 @@ void MainWindow::_CreateCentralWgt()
 	mForwardBtn->setToolTip(tr("Next"));
 	al->addWidget(mForwardBtn);
 	al->addStretch(1);
+
+	QLabel* time = new QLabel{ "3:07", this };
+	time->setAlignment(Qt::AlignCenter);
+	time->setFixedSize(68, 36);
+	time->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
+	al->addWidget(time);
 
 	ml->addLayout(al);
 
