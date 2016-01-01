@@ -13,16 +13,16 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	: QAbstractTableModel(parent)
 {
 	// TODO only for testing.
-	mPlaylist.emplace_back(Track("10 Markus Schulz feat. Delacey", "Destiny", 110));
-	mPlaylist.emplace_back(Track("9 Photographer & Susana", "Find A Way", 109));
-	mPlaylist.emplace_back(Track("8 MaRLo feat. Jano", "The Dreamers", 108));
-	mPlaylist.emplace_back(Track("7 Matt Darey feat. Kate Louise Smith", "See The Sun (Dan Stone Rework)", 107));
-	mPlaylist.emplace_back(Track("6 Above & Beyond feat. Zoe Johnston", "We're All We Need", 106));
+	mPlaylist.emplace_back(Track("0 Markus Schulz feat. Delacey", "Destiny", 110));
+	mPlaylist.emplace_back(Track("1 Photographer & Susana", "Find A Way", 109));
+	mPlaylist.emplace_back(Track("2 MaRLo feat. Jano", "The Dreamers", 108));
+	mPlaylist.emplace_back(Track("3 Matt Darey feat. Kate Louise Smith", "See The Sun (Dan Stone Rework)", 107));
+	mPlaylist.emplace_back(Track("4 Above & Beyond feat. Zoe Johnston", "We're All We Need", 106));
 	mPlaylist.emplace_back(Track("5 Omnia feat. Tilde", "For The First Time", 105));
-	mPlaylist.emplace_back(Track("4 Armin van Buuren feat. Eric Vloeimans", "Embrace", 104));
-	mPlaylist.emplace_back(Track("3 Armin van Buuren pres. Rising Star feat. Betsie Larkin", "Safe Inside You", 103));
-	mPlaylist.emplace_back(Track("2 Armin van Buuren & Jean Michel-Jarre", "Stardust (Armin van Buuren pres. Rising Star Remix", 102));
-	mPlaylist.emplace_back(Track("1 Ferry Corsten pres. Gouryella", "Anahera", 101));
+	mPlaylist.emplace_back(Track("6 Armin van Buuren feat. Eric Vloeimans", "Embrace", 104));
+	mPlaylist.emplace_back(Track("7 Armin van Buuren pres. Rising Star feat. Betsie Larkin", "Safe Inside You", 103));
+	mPlaylist.emplace_back(Track("8 Armin van Buuren & Jean Michel-Jarre", "Stardust (Armin van Buuren pres. Rising Star Remix", 102));
+	mPlaylist.emplace_back(Track("9 Ferry Corsten pres. Gouryella", "Anahera", 101));
 }
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
@@ -137,7 +137,12 @@ void PlaylistModel::OnMove(QVector<int> rows, int dest)
 	// Number of rows for the moving.
 	const auto num(rows.size());
 
-	beginMoveRows(parent, rows[0], rows[num - 1], parent, dest);
+	auto res = beginMoveRows(parent, rows[0], rows[num - 1], parent, dest);
+
+	if (!res) {
+		qDebug() << "PlaylistModel::OnMove: Result is " << res;
+		return;
+	}
 
 	// Copy rows whose have been moved into the temporary vector.
 	Playlist tmp(num);
@@ -152,8 +157,13 @@ void PlaylistModel::OnMove(QVector<int> rows, int dest)
 	if (dest > static_cast<int>(mPlaylist.size()))
 		dest = mPlaylist.size();
 
+	int coef = 0;
+	if (rows[0] < dest) {
+		coef = -1;
+	}
+
 	// Move rows to the destination.
-	mPlaylist.insert(std::begin(mPlaylist) + dest, std::begin(tmp), std::end(tmp));
+	mPlaylist.insert(std::begin(mPlaylist) + dest + coef, std::begin(tmp), std::end(tmp));
 
 	endMoveRows();
 }

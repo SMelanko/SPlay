@@ -29,7 +29,7 @@ PlaylistView::PlaylistView(QWidget* parent)
 	vh->setDefaultSectionSize(23);
 	setVerticalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
 	// Set custom widget style sheet.
-	//setStyleSheet(_Qss());
+	setStyleSheet(_Qss());
 	// Disable possibility for editing rows.
 	setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 	// Alternate background color in the table.
@@ -161,7 +161,8 @@ QString PlaylistView::_Qss() const NOEXCEPT
 {
 	return QString(
 		"QHeaderView {"
-			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #4287ff, stop: 1 #356ccc);"
+			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #357EC7, stop: 1 #356ccc);"
+			"font-size: 14px;"
 		"}"
 		"QHeaderView::section::horizontal {"
 			"color: #fff;"
@@ -171,8 +172,8 @@ QString PlaylistView::_Qss() const NOEXCEPT
 		"QHeaderView::section::horizontal::pressed {"
 			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #356ccc, stop: 1 #356ccc);"
 		"}"
-		"QTableWidget {"
-			"border: 2px solid #3873d9;"
+		"QTableView {"
+			"border: 2px solid #357EC7;"
 			"border-radius: 2px;"
 			"gridline-color: #d8d8d8;"
 			"selection-color: #000;"

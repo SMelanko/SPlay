@@ -35,6 +35,8 @@ public slots:
 private:
 	//! Creates application actions.
 	void _CreateActions();
+	//! Creates central widget.
+	void _CreateCentralWgt();
 	//! Creates application menu.
 	void _CreateMenu();
 
