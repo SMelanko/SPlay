@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QLabel>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSlider>
 #include <QStandardPaths>
@@ -20,6 +21,7 @@ namespace splay
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
+	, mPlayer(Q_NULLPTR)
 {
 	resize(640, 480);
 	setWindowTitle("SPlay");
@@ -28,11 +30,17 @@ MainWindow::MainWindow(QWidget* parent)
 	_CreateMenu();
 	_CreateCentralWgt();
 
+	typedef void(QMediaPlayer::*ErrorSignal)(QMediaPlayer::Error);
+	connect(&mPlayer, static_cast<ErrorSignal>(&QMediaPlayer::error),
+		this, &MainWindow::_OnHandleError);
+
 	statusBar()->showMessage(tr("SPlay music player"));
 }
 
 MainWindow::~MainWindow()
 {
+	mPlayer.stop();
+
 	delete mPlayModel;
 }
 
@@ -40,7 +48,8 @@ void MainWindow::OnPlayFile(const QString& filePath)
 {
 	state = true;
 	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
-	mPlayBtn->setIconSize(QSize{ 40, 40 });
+	mPlayer.setMedia(QUrl::fromLocalFile(filePath));
+	mPlayer.play();
 }
 
 void MainWindow::OnTogglePlayback()
@@ -103,8 +112,8 @@ void MainWindow::_CreateCentralWgt()
 
 	mVolBtn = new VolumeButton(this);
 	mVolBtn->setToolTip(tr("Adjust volume"));
-	mVolBtn->SetVolume(30);//mediaPlayer.volume());
-	//connect(mVolBtn, &VolumeButton::volumeChanged, &mediaPlayer, &QMediaPlayer::setVolume);
+	mVolBtn->SetVolume(mPlayer.volume());
+	connect(mVolBtn, &VolumeButton::VolumeChanged, &mPlayer, &QMediaPlayer::setVolume);
 	al->addWidget(mVolBtn);
 
 	al->addStretch(1);
@@ -136,7 +145,7 @@ void MainWindow::_CreateCentralWgt()
 	al->addWidget(mForwardBtn);
 	al->addStretch(1);
 
-	QLabel* time = new QLabel{ "3:07", this };
+	QLabel* time = new QLabel{ tr("00:00"), this };
 	time->setAlignment(Qt::AlignCenter);
 	time->setFixedSize(68, 36);
 	time->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
@@ -174,6 +183,11 @@ void MainWindow::_CreateMenu()
 	mHelpMenu = menuBar()->addMenu(tr("&Help"));
 	mHelpMenu->addAction(mAboutAct);
 	mHelpMenu->addAction(mAboutQtAct);
+}
+
+void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
+{
+	QMessageBox::critical(this, tr("SPlay error"), mPlayer.errorString());
 }
 
 } // namespace splay

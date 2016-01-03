@@ -19,15 +19,25 @@ else()
 endif()
 
 find_package(Qt5Widgets)
+find_package(Qt5Multimedia)
 
-if(Qt5Widgets_FOUND)
-	include_directories(${Qt5Widgets_INCLUDE_DIRS})
-	add_definitions(${Qt5Widgets_DEFINITIONS})
+if(Qt5Widgets_FOUND AND Qt5Multimedia_FOUND)
+	set(QT5_INCLUDES
+		${Qt5Widgets_INCLUDE_DIRS}
+		${Qt5Multimedia_INCLUDE_DIRS})
+	include_directories(${QT5_INCLUDES})
+	message(STATUS "Qt include list: ${QT5_INCLUDES}")
+	add_definitions(
+		${Qt5Widgets_DEFINITIONS}
+		${Qt5Multimedia_DEFINITIONS})
 
 	set(CMake_QT_LIBRARIES
-		${Qt5Widgets_LIBRARIES})
-	
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+		${Qt5Widgets_LIBRARIES}
+		${Qt5Multimedia_LIBRARIES})
+	message(STATUS "Qt library list: ${CMake_QT_LIBRARIES}")
+
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+	message(STATUS "Cxx flags: ${CMAKE_CXX_FLAGS}")
 	
 	if(WIN32 AND TARGET Qt5::Core)
 		get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)

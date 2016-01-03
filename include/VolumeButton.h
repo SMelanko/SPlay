@@ -18,7 +18,7 @@ class VolumeButton : public QToolButton
 {
 	Q_OBJECT
 
-	//Q_PROPERTY(int volume READ Volume WRITE SetVolume NOTIFY VolumeChanged)
+	Q_PROPERTY(int volume READ Volume WRITE SetVolume NOTIFY VolumeChanged)
 
 public:
 	//! Constructor.
@@ -38,7 +38,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	//! The signal emits volume value which has been changed.
-	void volumeChanged(int volume);
+	void VolumeChanged(int volume);
 
 private:
 	//!

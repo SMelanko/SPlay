@@ -25,7 +25,7 @@ VolumeButton::VolumeButton(QWidget* parent)
 	mSlider = new QSlider(Qt::Horizontal, popup);
 	mSlider->setRange(0, 100);
 	connect(mSlider, &QAbstractSlider::valueChanged,
-		this, &VolumeButton::volumeChanged);
+		this, &VolumeButton::VolumeChanged);
 
 	mLabel = new QLabel(popup);
 	mLabel->setAlignment(Qt::AlignCenter);

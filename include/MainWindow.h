@@ -4,6 +4,7 @@
 #define _SPLAY_MAIN_WINDOW_H_
 
 #include <QMainWindow>
+#include <QMediaPlayer>
 
 QT_FORWARD_DECLARE_CLASS(QAbstractButton)
 QT_FORWARD_DECLARE_CLASS(QAction)
@@ -41,6 +42,10 @@ private:
 	//! Creates application menu.
 	void _CreateMenu();
 
+private Q_SLOTS:
+	//! Shows a string describling the last error condition.
+	void _OnHandleError() Q_DECL_NOEXCEPT;
+
 private:
 	//! Play/pause button.
 	QAbstractButton* mPlayBtn;
@@ -52,6 +57,12 @@ private:
 	QSlider* mPosSldr;
 	//! Volume button.
 	VolumeButton* mVolBtn;
+	//! Playlist table model.
+	PlaylistModel* mPlayModel;
+	//! Playlist table view.
+	PlaylistView* mPlayView;
+	//! Class allows the playing of a media source.
+	QMediaPlayer mPlayer;
 
 	//
 	// Actions.
@@ -73,11 +84,6 @@ private:
 	QMenu* mFileMenu;
 	QMenu* mSettingsMenu;
 	QMenu* mHelpMenu;
-
-	//! Playlist table model.
-	PlaylistModel* mPlayModel;
-	//! Playlist table view.
-	PlaylistView* mPlayView;
 
 	bool state;
 };
