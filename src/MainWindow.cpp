@@ -155,7 +155,7 @@ void MainWindow::_CreateCentralWgt()
 
 	mPosSldr = new QSlider{ Qt::Horizontal, this };
 	mPosSldr->setEnabled(true); // false
-	mPosSldr->setFixedHeight(25);
+	mPosSldr->setFixedHeight(20);
 	mPosSldr->setToolTip(tr("Seek"));
 	ml->addWidget(mPosSldr);
 

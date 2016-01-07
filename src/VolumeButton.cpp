@@ -23,6 +23,7 @@ VolumeButton::VolumeButton(QWidget* parent)
 	QWidget* popup = new QWidget(this);
 
 	mSlider = new QSlider(Qt::Horizontal, popup);
+	mSlider->setFixedHeight(20);
 	mSlider->setRange(0, 100);
 	connect(mSlider, &QAbstractSlider::valueChanged,
 		this, &VolumeButton::VolumeChanged);
