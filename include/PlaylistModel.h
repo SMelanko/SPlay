@@ -18,7 +18,10 @@ public:
 	//! Constructor.
 	explicit PlaylistModel(QObject* parent = Q_NULLPTR);
 	//! Destructor.
-	~PlaylistModel() = default;
+	virtual ~PlaylistModel() = default;
+
+	//! Disable copy constructor and copy assign operator.
+	Q_DISABLE_COPY(PlaylistModel)
 
 public Q_SLOTS:
 	//! Inserts tracks into the end of model.

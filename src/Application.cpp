@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Logger.h"
 #include "MainWindow.h"
 
 #include <QDebug>
@@ -13,14 +14,13 @@ Application::Application(int& argc, char** argv)
 	setOrganizationName("SM"); // Fictitious parameter.
 	setOrganizationDomain("sm.com.ua"); // Fictitious parameter.
 	setApplicationDisplayName(tr("SPlay music player"));
-	//setWindowIcon(QIcon(":/logo.png"));
+	setWindowIcon(QIcon(":/btn_play"));
 
 	mMainWnd = new MainWindow{};
 	mMainWnd->show();
 
 	// Load translations.
 	// Parse command line arguments.
-	// Show main window.
 }
 
 Application::~Application()
@@ -30,17 +30,30 @@ Application::~Application()
 
 bool Application::notify(QObject* receiver, QEvent* event)
 {
-	bool done = true;
+	QString msg;
 
 	try {
-		done = QApplication::notify(receiver, event);
-	} catch (const std::exception e) {
-		qDebug() << e.what();
+		return QApplication::notify(receiver, event);
+	} catch (const std::exception& e) {
+		msg = _ErrMsg(e.what(), receiver, event);
 	} catch (...) {
-		qDebug() << "SPlay unhandled exception.";
+		msg = _ErrMsg("<Unknown>", receiver, event);
 	}
 
-	return done;
+	qFatal(msg.toStdString().c_str());
+	SPLAY_LOG_ERROR(msg.toStdString().c_str());
+
+	return false;
+}
+
+QString Application::_ErrMsg(const char* msg,
+	const QObject* receiver, const QEvent* event) const
+{
+	return QString{ "Error: %1. Sending event %2 to object %3 (%4)" }
+		.arg(msg)
+		.arg(typeid(*event).name())
+		.arg(qPrintable(receiver->objectName()))
+		.arg(typeid(*receiver).name());
 }
 
 } // namespace splay

@@ -26,7 +26,10 @@ public:
 	//! Constructor.
 	explicit MainWindow(QWidget* parent = Q_NULLPTR);
 	//! Destructor.
-	~MainWindow();
+	virtual ~MainWindow();
+
+	//! Disable copy constructor and copy assign operator.
+	Q_DISABLE_COPY(MainWindow)
 
 public slots:
 	//! Plays a chosen track.

@@ -3,8 +3,6 @@
 #ifndef _SPLAY_VOLUME_BUTTON_H_
 #define _SPLAY_VOLUME_BUTTON_H_
 
-#include "Common.h"
-
 #include <QToolButton>
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
@@ -26,7 +24,7 @@ public:
 
 public:
 	//! Returns current volume value.
-	int Volume() const NOEXCEPT;
+	int Volume() const Q_DECL_NOEXCEPT;
 
 public Q_SLOTS:
 	//! Decreases volume.
@@ -41,9 +39,9 @@ Q_SIGNALS:
 	void VolumeChanged(int volume);
 
 private:
-	//!
+	//! Button label.
 	QLabel* mLabel;
-	//!
+	//! Menu.
 	QMenu* mMenu;
 	//! Widget for changing volume value.
 	QSlider* mSlider;

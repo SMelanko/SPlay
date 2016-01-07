@@ -64,7 +64,7 @@ void VolumeButton::SetVolume(int volume)
 	mSlider->setValue(volume);
 }
 
-int VolumeButton::Volume() const NOEXCEPT
+int VolumeButton::Volume() const Q_DECL_NOEXCEPT
 {
 	return mSlider->value();
 }

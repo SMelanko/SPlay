@@ -51,10 +51,6 @@ PlaylistView::PlaylistView(QWidget* parent)
 	connect(horizontalHeader(), &QHeaderView::sectionResized, this, &PlaylistView::OnSectionResized);
 }
 
-PlaylistView::~PlaylistView()
-{
-}
-
 void PlaylistView::dragEnterEvent(QDragEnterEvent* event)
 {
 	qDebug() << "PlaylistView::dragEnterEvent";
@@ -146,7 +142,7 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// and if it is true, will save new section settings.
 }
 
-RowsList PlaylistView::_GetSelectedRows() const NOEXCEPT
+RowsList PlaylistView::_GetSelectedRows() const Q_DECL_NOEXCEPT
 {
 	RowsList selectedRows;
 	const auto indexes = selectionModel()->selectedRows();
@@ -162,7 +158,7 @@ RowsList PlaylistView::_GetSelectedRows() const NOEXCEPT
 	return std::move(selectedRows);
 }
 
-QString PlaylistView::_Qss() const NOEXCEPT
+QString PlaylistView::_Qss() const Q_DECL_NOEXCEPT
 {
 	return QString(
 		"QHeaderView {"

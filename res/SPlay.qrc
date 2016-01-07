@@ -6,4 +6,9 @@
         <file alias="btn_rewind">Icons/btn_rewind.png</file>
         <file alias="btn_volume">Icons/btn_volume.png</file>
     </qresource>
+    <qresource prefix="/logo">
+        <file>splay_16.png</file>
+        <file>splay_32.png</file>
+        <file>splay_v2_64.png</file>
+    </qresource>
 </RCC>

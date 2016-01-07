@@ -5,29 +5,29 @@
 namespace splay
 {
 
-Track::Track(const QString& author, const QString& title, const int duration) NOEXCEPT
+Track::Track(const QString& author, const QString& title, const int duration)
 	: mAuthor(author)
 	, mTitle(title)
 	, mDuration(duration)
 {
 }
 
-QString Track::Author() const NOEXCEPT
+QString Track::Author() const Q_DECL_NOEXCEPT
 {
 	return mAuthor;
 }
 
-QString Track::Title() const NOEXCEPT
+QString Track::Title() const Q_DECL_NOEXCEPT
 {
 	return mTitle;
 }
 
-int Track::Duration() const NOEXCEPT
+int Track::Duration() const Q_DECL_NOEXCEPT
 {
 	return mDuration;
 }
 
-QString Track::DurationStr() const NOEXCEPT
+QString Track::DurationStr() const Q_DECL_NOEXCEPT
 {
 	Q_DECL_CONSTEXPR int16_t secsIn1Hour = 3600;
 	Q_DECL_CONSTEXPR int8_t secsIn1Min = 60;

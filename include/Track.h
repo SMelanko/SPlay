@@ -3,8 +3,6 @@
 #ifndef _SPLAY_TRACK_H_
 #define _SPLAY_TRACK_H_
 
-#include "Common.h"
-
 #include <QString>
 
 namespace splay
@@ -14,23 +12,23 @@ class Track
 {
 public:
 	//! Constructor.
-	Track() NOEXCEPT = default;
-	Track(const QString& author, const QString& title, const int duration) NOEXCEPT;
+	Track() /*Q_DECL_NOEXCEPT*/ = default;
+	Track(const QString& author, const QString& title, const int duration);
 	//! Destructor.
-	~Track() NOEXCEPT = default;
+	~Track() /*Q_DECL_NOEXCEPT*/ = default;
 	//! Move.
 	//Track(Track&&) NOEXCEPT = default;
 	//Track& operator=(Track&&) NOEXCEPT = default;
 
 public:
 	//! Returns the author's name.
-	QString Author() const NOEXCEPT;
+	QString Author() const Q_DECL_NOEXCEPT;
 	//! Returns the track's title.
-	QString Title() const NOEXCEPT;
+	QString Title() const Q_DECL_NOEXCEPT;
 	//! Returns the track's duration in seconds.
-	int Duration() const NOEXCEPT;
+	int Duration() const Q_DECL_NOEXCEPT;
 	//! Returns the track's duration in format "hours:minutes:seconds".
-	QString DurationStr() const NOEXCEPT;
+	QString DurationStr() const Q_DECL_NOEXCEPT;
 
 private:
 	//! Author.

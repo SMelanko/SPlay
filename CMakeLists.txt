@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 project(STest)
 
 if(CMAKE_BUILD_TYPE STREQUAL "")
-	set(CMAKE_BUILD_TYPE Debug CACHE STRING "None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+	set(CMAKE_BUILD_TYPE Debug CACHE STRING
+		"None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
@@ -36,9 +37,8 @@ if(Qt5Widgets_FOUND AND Qt5Multimedia_FOUND)
 		${Qt5Multimedia_LIBRARIES})
 	message(STATUS "Qt library list: ${CMake_QT_LIBRARIES}")
 
-	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 	message(STATUS "Cxx flags: ${CMAKE_CXX_FLAGS}")
-	
+
 	if(WIN32 AND TARGET Qt5::Core)
 		get_property(_Qt5_Core_LOCATION TARGET Qt5::Core PROPERTY LOCATION)
 		get_filename_component(Qt_BIN_DIR "${_Qt5_Core_LOCATION}" PATH)
@@ -49,7 +49,6 @@ endif()
 
 set(INCLUDE_LIST
 	include/Application.h
-	include/Common.h
 	include/Logger.h
 	include/MainWindow.h
 	include/PlaylistModel.h
@@ -57,9 +56,6 @@ set(INCLUDE_LIST
 	include/Track.h
 	include/Types.h
 	include/VolumeButton.h)
-
-set(cppformat_INCLUDE_LIST
-	include/cppformat/format.h)
 
 set(SRC_LIST
 	src/Application.cpp
@@ -70,9 +66,6 @@ set(SRC_LIST
 	src/PlaylistView.cpp
 	src/Track.cpp
 	src/VolumeButton.cpp)
-
-set(cppformat_SRC_LIST
-	src/cppformat/format.cc)
 
 qt5_wrap_cpp(MOC_SRC_LIST
 	include/Application.h
@@ -85,10 +78,8 @@ qt5_add_resources(RES_LIST
 	res/SPlay.qrc)
 
 source_group("Header Files" FILES ${INCLUDE_LIST})
-source_group("Header Files\\cppformat" FILES ${cppformat_INCLUDE_LIST})
 source_group("Source Files" FILES ${SRC_LIST})
 source_group("Source Files\\MOC" FILES ${MOC_SRC_LIST})
-source_group("Source Files\\cppformat" FILES ${cppformat_SRC_LIST})
 source_group("Resource Files" FILES ${RES_LIST})
 
 #
@@ -102,10 +93,8 @@ include_directories(
 
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 	${INCLUDE_LIST}
-	${cppformat_INCLUDE_LIST}
 	${SRC_LIST}
 	${MOC_SRC_LIST}
-	${cppformat_SRC_LIST}
 	${RES_LIST})
 
 target_link_libraries(${PROJECT_NAME}

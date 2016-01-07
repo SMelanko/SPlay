@@ -3,9 +3,9 @@
 #ifndef _SPLAY_LOGGER_H_
 #define _SPLAY_LOGGER_H_
 
-#include "Common.h"
-
 #include <spdlog/spdlog.h>
+
+#include <QtGlobal>
 
 namespace splay
 {
@@ -16,14 +16,12 @@ public:
 	//! Destructor.
 	~Logger() = default;
 
-	//! Copy constructor.
-	Logger(const Logger&) = delete;
-	//! Move constructor.
-	Logger(Logger&&) NOEXCEPT = delete;
-	//! Copy assign operator.
-	Logger& operator=(const Logger&) = delete;
-	//! Move assign operator.
-	Logger& operator=(Logger&&) NOEXCEPT = delete;
+	//! Disable copy constructor and copy assign operator.
+	Q_DISABLE_COPY(Logger)
+
+	//! Disable move constructor and move assign operator.
+	Logger(Logger&&) Q_DECL_NOEXCEPT = delete;
+	Logger& operator=(Logger&&) Q_DECL_NOEXCEPT = delete;
 
 	//! Returns singleton instance of the logger.
 	static spdlog::logger& Instance();
