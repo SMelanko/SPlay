@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "Logger.h"
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
 #include "VolumeButton.h"
@@ -21,7 +22,6 @@ namespace splay
 
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
-	, mPlayer(Q_NULLPTR)
 {
 	resize(640, 480);
 	setWindowTitle("SPlay");
@@ -33,6 +33,10 @@ MainWindow::MainWindow(QWidget* parent)
 	typedef void(QMediaPlayer::*ErrorSignal)(QMediaPlayer::Error);
 	connect(&mPlayer, static_cast<ErrorSignal>(&QMediaPlayer::error),
 		this, &MainWindow::_OnHandleError);
+	connect(&mPlayer, &QMediaPlayer::durationChanged,
+		this, &MainWindow::_OnUpdateDuration);
+	connect(&mPlayer, &QMediaPlayer::positionChanged,
+		this, &MainWindow::_OnUpdatePosition);
 
 	statusBar()->showMessage(tr("SPlay music player"));
 }
@@ -46,7 +50,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnPlayFile(const QString& filePath)
 {
-	state = true;
 	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
 	mPlayer.setMedia(QUrl::fromLocalFile(filePath));
 	mPlayer.play();
@@ -54,15 +57,18 @@ void MainWindow::OnPlayFile(const QString& filePath)
 
 void MainWindow::OnTogglePlayback()
 {
-	if (state) {
-		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
-		mPlayBtn->setIconSize(QSize{ 40, 40 });
-		state = false;
+	if (mPlayer.mediaStatus() == QMediaPlayer::NoMedia) {
+		return;
 	}
-	else {
+	else if (mPlayer.state() == QMediaPlayer::PlayingState) {
+		mPlayer.pause();
 		mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 		mPlayBtn->setIconSize(QSize{ 40, 40 });
-		state = true;
+	}
+	else {
+		mPlayer.play();
+		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
+		mPlayBtn->setIconSize(QSize{ 40, 40 });
 	}
 }
 
@@ -70,9 +76,11 @@ void MainWindow::_CreateActions()
 {
 	mOpenFileAct = new QAction{ tr("&Open"), this };
 	mOpenFileAct->setShortcut(QKeySequence::Open);
-	mOpenFileAct->setStatusTip(tr("Replace current playlist with chosen file(s), then start playing."));
+	mOpenFileAct->setStatusTip(
+		tr("Replace current playlist with chosen file(s), then start playing."));
 	connect(mOpenFileAct, &QAction::triggered, this, [&]() {
-		const QStringList musicPaths = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		const QStringList musicPaths = QStandardPaths::standardLocations(
+			QStandardPaths::MusicLocation);
 		const auto dir = musicPaths.isEmpty() ? QDir::homePath() : musicPaths.first();
 
 		const QString filePath = QFileDialog::getOpenFileName(
@@ -113,7 +121,8 @@ void MainWindow::_CreateCentralWgt()
 	mVolBtn = new VolumeButton(this);
 	mVolBtn->setToolTip(tr("Adjust volume"));
 	mVolBtn->SetVolume(mPlayer.volume());
-	connect(mVolBtn, &VolumeButton::VolumeChanged, &mPlayer, &QMediaPlayer::setVolume);
+	connect(mVolBtn, &VolumeButton::VolumeChanged,
+		&mPlayer, &QMediaPlayer::setVolume);
 	al->addWidget(mVolBtn);
 
 	al->addStretch(1);
@@ -187,7 +196,19 @@ void MainWindow::_CreateMenu()
 
 void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
 {
-	QMessageBox::critical(this, tr("SPlay error"), mPlayer.errorString());
+	const auto errStr{ mPlayer.errorString() };
+	SPLAY_LOG_CRITICAL(errStr.toStdString().c_str());
+	QMessageBox::critical(this, tr("SPlay error"), errStr);
+}
+
+void MainWindow::_OnUpdateDuration(qint64 duration)
+{
+	mPosSldr->setRange(0, duration);
+}
+
+void MainWindow::_OnUpdatePosition(qint64 pos)
+{
+	mPosSldr->setValue(pos);
 }
 
 } // namespace splay

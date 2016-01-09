@@ -48,6 +48,10 @@ private:
 private Q_SLOTS:
 	//! Shows a string describling the last error condition.
 	void _OnHandleError() Q_DECL_NOEXCEPT;
+	//! Updates the slider duration according with current audio.
+	void _OnUpdateDuration(qint64 duration);
+	//! Updates the playback position of the current audio.
+	void _OnUpdatePosition(qint64 pos);
 
 private:
 	//! Play/pause button.
@@ -87,8 +91,6 @@ private:
 	QMenu* mFileMenu;
 	QMenu* mSettingsMenu;
 	QMenu* mHelpMenu;
-
-	bool state;
 };
 
 } // namespace splay
