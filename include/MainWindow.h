@@ -8,6 +8,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QAbstractButton)
 QT_FORWARD_DECLARE_CLASS(QAction)
+QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 
@@ -31,9 +32,13 @@ public:
 	//! Disable copy constructor and copy assign operator.
 	Q_DISABLE_COPY(MainWindow)
 
-public slots:
+public Q_SLOTS:
 	//! Plays a chosen track.
 	void OnPlayFile(const QString& filePath);
+	//! Triggers a slider action.
+	void OnSeekForward();
+	//! Triggers a slider action.
+	void OnSeekBackward();
 	//! Plays/pauses a track from the playlist.
 	void OnTogglePlayback();
 
@@ -48,6 +53,8 @@ private:
 private Q_SLOTS:
 	//! Shows a string describling the last error condition.
 	void _OnHandleError() Q_DECL_NOEXCEPT;
+	//! Sets the playback position by the slider.
+	void _OnSetPosition(int position);
 	//! Updates the slider duration according with current audio.
 	void _OnUpdateDuration(qint64 duration);
 	//! Updates the playback position of the current audio.
@@ -70,6 +77,16 @@ private:
 	PlaylistView* mPlayView;
 	//! Class allows the playing of a media source.
 	QMediaPlayer mPlayer;
+	//! Shows current audio time.
+	QLabel* mTimeLbl;
+
+	//
+	// Menu.
+	//
+
+	QMenu* mFileMenu;
+	QMenu* mSettingsMenu;
+	QMenu* mHelpMenu;
 
 	//
 	// Actions.
@@ -83,14 +100,6 @@ private:
 	//! Help
 	QAction* mAboutAct;
 	QAction* mAboutQtAct;
-
-	//
-	// Menu.
-	//
-
-	QMenu* mFileMenu;
-	QMenu* mSettingsMenu;
-	QMenu* mHelpMenu;
 };
 
 } // namespace splay

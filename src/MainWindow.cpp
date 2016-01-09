@@ -16,6 +16,7 @@
 #include <QStandardPaths>
 #include <QStatusBar>
 #include <QStyle>
+#include <QTime>
 
 namespace splay
 {
@@ -55,6 +56,16 @@ void MainWindow::OnPlayFile(const QString& filePath)
 	mPlayer.play();
 }
 
+void MainWindow::OnSeekForward()
+{
+	mPosSldr->triggerAction(QSlider::SliderPageStepAdd);
+}
+
+void MainWindow::OnSeekBackward()
+{
+	mPosSldr->triggerAction(QSlider::SliderPageStepSub);
+}
+
 void MainWindow::OnTogglePlayback()
 {
 	if (mPlayer.mediaStatus() == QMediaPlayer::NoMedia) {
@@ -63,12 +74,10 @@ void MainWindow::OnTogglePlayback()
 	else if (mPlayer.state() == QMediaPlayer::PlayingState) {
 		mPlayer.pause();
 		mPlayBtn->setIcon(QIcon{ ":/btn_play" });
-		mPlayBtn->setIconSize(QSize{ 40, 40 });
 	}
 	else {
 		mPlayer.play();
 		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
-		mPlayBtn->setIconSize(QSize{ 40, 40 });
 	}
 }
 
@@ -154,11 +163,11 @@ void MainWindow::_CreateCentralWgt()
 	al->addWidget(mForwardBtn);
 	al->addStretch(1);
 
-	QLabel* time = new QLabel{ tr("00:00"), this };
-	time->setAlignment(Qt::AlignCenter);
-	time->setFixedSize(68, 36);
-	time->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
-	al->addWidget(time);
+	mTimeLbl = new QLabel{ tr("00:00"), this };
+	mTimeLbl->setAlignment(Qt::AlignCenter);
+	mTimeLbl->setFixedSize(68, 36);
+	mTimeLbl->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
+	al->addWidget(mTimeLbl);
 
 	ml->addLayout(al);
 
@@ -166,6 +175,7 @@ void MainWindow::_CreateCentralWgt()
 	mPosSldr->setEnabled(true); // false
 	mPosSldr->setFixedHeight(20);
 	mPosSldr->setToolTip(tr("Seek"));
+	connect(mPosSldr, &QSlider::valueChanged, this, &MainWindow::_OnSetPosition);
 	ml->addWidget(mPosSldr);
 
 	mPlayModel = new PlaylistModel{};
@@ -201,14 +211,26 @@ void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
 	QMessageBox::critical(this, tr("SPlay error"), errStr);
 }
 
+void MainWindow::_OnSetPosition(int position)
+{
+	// Avoid seeking when the slider value change is triggered from _OnUpdatePosition.
+	if (qAbs(mPlayer.position() - position) > 99) {
+		mPlayer.setPosition(position);
+	}
+}
+
 void MainWindow::_OnUpdateDuration(qint64 duration)
 {
 	mPosSldr->setRange(0, duration);
+	mPosSldr->setPageStep(duration / 2);
 }
 
 void MainWindow::_OnUpdatePosition(qint64 pos)
 {
 	mPosSldr->setValue(pos);
+
+	QTime duration{ 0, pos / 60000, qRound((pos % 60000) / 1000.0) };
+	mTimeLbl->setText(duration.toString(tr("mm:ss")));
 }
 
 } // namespace splay
