@@ -53,6 +53,7 @@ set(INCLUDE_LIST
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
+	include/Slider.h
 	include/Track.h
 	include/Types.h
 	include/VolumeButton.h)
@@ -64,6 +65,7 @@ set(SRC_LIST
 	src/MainWindow.cpp
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
+	src/Slider.cpp
 	src/Track.cpp
 	src/VolumeButton.cpp)
 

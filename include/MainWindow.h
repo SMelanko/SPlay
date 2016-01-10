@@ -10,13 +10,13 @@ QT_FORWARD_DECLARE_CLASS(QAbstractButton)
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QMenu)
-QT_FORWARD_DECLARE_CLASS(QSlider)
 
 namespace splay
 {
 
 class PlaylistModel;
 class PlaylistView;
+class Slider;
 class VolumeButton;
 
 class MainWindow : public QMainWindow
@@ -68,7 +68,7 @@ private:
 	//! Skip forward button.
 	QAbstractButton* mForwardBtn;
 	//! Seek slider.
-	QSlider* mPosSldr;
+	Slider* mPosSldr;
 	//! Volume button.
 	VolumeButton* mVolBtn;
 	//! Playlist table model.

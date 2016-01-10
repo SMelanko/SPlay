@@ -162,7 +162,7 @@ QString PlaylistView::_Qss() const Q_DECL_NOEXCEPT
 {
 	return QString(
 		"QHeaderView {"
-			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #357EC7, stop: 1 #356ccc);"
+			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #357ec7, stop: 1 #356ccc);"
 			"font-size: 14px;"
 		"}"
 		"QHeaderView::section::horizontal {"
@@ -174,7 +174,7 @@ QString PlaylistView::_Qss() const Q_DECL_NOEXCEPT
 			"background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #356ccc, stop: 1 #356ccc);"
 		"}"
 		"QTableView {"
-			"border: 2px solid #357EC7;"
+			"border: 2px solid #357ec7;"
 			"border-radius: 2px;"
 			"gridline-color: #d8d8d8;"
 			"selection-color: #000;"

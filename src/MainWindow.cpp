@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
+#include "Slider.h"
 #include "VolumeButton.h"
 
 #include <QAction>
@@ -22,7 +23,7 @@ namespace splay
 {
 
 MainWindow::MainWindow(QWidget* parent)
-	: QMainWindow(parent)
+	: QMainWindow { parent }
 {
 	resize(640, 480);
 	setWindowTitle("SPlay");
@@ -58,11 +59,13 @@ void MainWindow::OnPlayFile(const QString& filePath)
 
 void MainWindow::OnSeekForward()
 {
+	qDebug() << "triggerAction(QSlider::SliderPageStepAdd);";
 	mPosSldr->triggerAction(QSlider::SliderPageStepAdd);
 }
 
 void MainWindow::OnSeekBackward()
 {
+	qDebug() << "triggerAction(QSlider::SliderPageStepSub);";
 	mPosSldr->triggerAction(QSlider::SliderPageStepSub);
 }
 
@@ -171,10 +174,7 @@ void MainWindow::_CreateCentralWgt()
 
 	ml->addLayout(al);
 
-	mPosSldr = new QSlider{ Qt::Horizontal, this };
-	mPosSldr->setEnabled(true); // false
-	mPosSldr->setFixedHeight(20);
-	mPosSldr->setToolTip(tr("Seek"));
+	mPosSldr = new Slider{ Qt::Horizontal, this };
 	connect(mPosSldr, &QSlider::valueChanged, this, &MainWindow::_OnSetPosition);
 	ml->addWidget(mPosSldr);
 
@@ -222,15 +222,24 @@ void MainWindow::_OnSetPosition(int position)
 void MainWindow::_OnUpdateDuration(qint64 duration)
 {
 	mPosSldr->setRange(0, duration);
-	mPosSldr->setPageStep(duration / 2);
+	mPosSldr->setPageStep(duration / 10);
 }
 
 void MainWindow::_OnUpdatePosition(qint64 pos)
 {
 	mPosSldr->setValue(pos);
 
-	QTime duration{ 0, pos / 60000, qRound((pos % 60000) / 1000.0) };
-	mTimeLbl->setText(duration.toString(tr("mm:ss")));
+	Q_DECL_CONSTEXPR int coef = 60000;
+	int minutes = static_cast<int>(pos / coef);
+	int seconds = qRound((pos % coef) / 1000.0);
+
+	if (seconds == 60) {
+		++minutes;
+		seconds = 0;
+	}
+
+	QTime time{ 0, minutes, seconds };
+	mTimeLbl->setText(time.toString(tr("mm:ss")));
 }
 
 } // namespace splay
