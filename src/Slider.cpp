@@ -10,6 +10,7 @@ Slider::Slider(Qt::Orientation orient, QWidget* parent)
 	: QSlider{ orient, parent }
 {
 	setCursor(Qt::PointingHandCursor);
+	setFixedHeight(10); // For Windows.
 	setToolTip(tr("Seek"));
 	setStyleSheet(_Qss());
 }
@@ -17,7 +18,8 @@ Slider::Slider(Qt::Orientation orient, QWidget* parent)
 void Slider::mousePressEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton) {
-		const auto val = minimum() + ((maximum()-minimum()) * event->x()) / width();
+		const auto val = minimum() +
+			((maximum()- minimum()) * event->x()) / width();
 		setValue(val);
 
 		event->accept();

@@ -206,7 +206,7 @@ void MainWindow::_CreateMenu()
 
 void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
 {
-	const auto errStr{ mPlayer.errorString() };
+	const auto errStr = mPlayer.errorString();
 	SPLAY_LOG_CRITICAL(errStr.toStdString().c_str());
 	QMessageBox::critical(this, tr("SPlay error"), errStr);
 }
