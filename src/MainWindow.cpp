@@ -130,22 +130,26 @@ void MainWindow::_CreateCentralWgt()
 
 	QBoxLayout* al{ new QHBoxLayout };
 
+	QHBoxLayout* left{ new QHBoxLayout };
 	mVolBtn = new VolumeButton(this);
 	mVolBtn->setToolTip(tr("Adjust volume"));
 	mVolBtn->SetVolume(mPlayer.volume());
 	connect(mVolBtn, &VolumeButton::VolumeChanged,
 		&mPlayer, &QMediaPlayer::setVolume);
-	al->addWidget(mVolBtn);
+	left->addWidget(mVolBtn);
+	left->addStretch();
 
-	al->addStretch(1);
+	al->addLayout(left);
+
+	QHBoxLayout* center{ new QHBoxLayout };
 	mBackwardBtn = new QPushButton{ this };
 	mBackwardBtn->setEnabled(true);
 	mBackwardBtn->setFixedSize(36, 36);
 	mBackwardBtn->setIcon(QIcon{ ":/btn_rewind" });
 	mBackwardBtn->setIconSize(QSize{ 28, 28 });
 	mBackwardBtn->setToolTip(tr("Previous"));
-	al->addWidget(mBackwardBtn);
-	al->addSpacing(15);
+	center->addWidget(mBackwardBtn);
+	center->addSpacing(15);
 
 	mPlayBtn = new QPushButton{ this };
 	mPlayBtn->setEnabled(true);
@@ -154,8 +158,8 @@ void MainWindow::_CreateCentralWgt()
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setToolTip(tr("Play"));
 	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
-	al->addWidget(mPlayBtn);
-	al->addSpacing(15);
+	center->addWidget(mPlayBtn);
+	center->addSpacing(15);
 
 	mForwardBtn = new QPushButton{ this };
 	mForwardBtn->setEnabled(true);
@@ -163,14 +167,19 @@ void MainWindow::_CreateCentralWgt()
 	mForwardBtn->setIcon(QIcon{ ":/btn_forward" });
 	mForwardBtn->setIconSize(QSize{ 28, 28 });
 	mForwardBtn->setToolTip(tr("Next"));
-	al->addWidget(mForwardBtn);
-	al->addStretch(1);
+	center->addWidget(mForwardBtn);
 
+	al->addLayout(center);
+
+	QHBoxLayout* right{ new QHBoxLayout };
+	right->addStretch();
 	mTimeLbl = new QLabel{ tr("00:00"), this };
 	mTimeLbl->setAlignment(Qt::AlignCenter);
 	mTimeLbl->setFixedSize(68, 36);
 	mTimeLbl->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
-	al->addWidget(mTimeLbl);
+	right->addWidget(mTimeLbl);
+
+	al->addLayout(right);
 
 	ml->addLayout(al);
 
