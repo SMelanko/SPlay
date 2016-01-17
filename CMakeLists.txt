@@ -49,7 +49,7 @@ else()
 	message(FATAL_ERROR "The Qt5 package was not found")
 endif()
 
-find_package(taglib)
+find_package(Taglib)
 
 if (taglib_found)
 	add_definitions(-DTAGLIB_STATIC)
