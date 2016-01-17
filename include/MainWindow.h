@@ -34,7 +34,7 @@ public:
 
 public Q_SLOTS:
 	//! Plays a chosen track.
-	void OnPlayFile(const QString& filePath);
+	void OnPlayFile(const QStringList& pathList);
 	//! Triggers a slider action.
 	void OnSeekForward();
 	//! Triggers a slider action.
@@ -53,6 +53,8 @@ private:
 private Q_SLOTS:
 	//! Shows a string describling the last error condition.
 	void _OnHandleError() Q_DECL_NOEXCEPT;
+	//! Opens new audio files.
+	void _OnOpenFiles();
 	//! Sets the playback position by the slider.
 	void _OnSetPosition(int position);
 	//! Updates the slider duration according with current audio.

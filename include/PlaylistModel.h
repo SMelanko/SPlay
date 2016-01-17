@@ -23,13 +23,19 @@ public:
 	//! Disable copy constructor and copy assign operator.
 	Q_DISABLE_COPY(PlaylistModel)
 
+public:
+	//! Adds media content items to the playlist.
+	void Add(const QStringList& pathList);
+	//! Opens new list of the media files and removes previous one.
+	Playlist* Open(const QStringList& pathList);
+
 public Q_SLOTS:
-	//! Inserts tracks into the end of model.
+	//! TODO Inserts tracks into the end of model.
 	void OnInsert(QStringList list);
-	//! Executes internal moving of the rows.
-	void OnMove(RowsList selectedRows, int dest);
-	//! Remove specified rows from view.
-	void OnRemove(RowsList selectedRows);
+	//! TODO Executes internal moving of the rows.
+	void OnMove(RowList selectedRows, int dest);
+	//! TODO Remove specified rows from view.
+	void OnRemove(RowList selectedRows);
 
 protected:
 	//! Returns the number of columns for the children of the given parent.
@@ -46,6 +52,10 @@ protected:
 	int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
 	//! Returns the drop actions supported by this model.
 	Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
+
+private:
+	//! Removes all the items from the playlist.
+	void _Clear();
 
 private:
 	//! Container of the specified audio files.

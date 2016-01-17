@@ -54,7 +54,7 @@ set(INCLUDE_LIST
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/Slider.h
-	include/Track.h
+#	include/Track.h
 	include/Types.h
 	include/VolumeButton.h)
 
@@ -66,7 +66,7 @@ set(SRC_LIST
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
 	src/Slider.cpp
-	src/Track.cpp
+#	src/Track.cpp
 	src/VolumeButton.cpp)
 
 qt5_wrap_cpp(MOC_SRC_LIST

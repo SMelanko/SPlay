@@ -3,16 +3,15 @@
 #ifndef _SPLAY_TYPES_H_
 #define _SPLAY_TYPES_H_
 
-#include "Track.h"
-
-#include <memory>
 #include <vector>
+
+#include <QMediaPlaylist>
 
 namespace splay
 {
 
-using Playlist = std::vector<Track>;
-using RowsList = std::vector<int>;
+using Playlist = QMediaPlaylist;
+using RowList = std::vector<int>;
 
 }
 

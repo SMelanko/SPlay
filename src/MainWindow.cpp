@@ -50,11 +50,12 @@ MainWindow::~MainWindow()
 	delete mPlayModel;
 }
 
-void MainWindow::OnPlayFile(const QString& filePath)
+void MainWindow::OnPlayFile(const QStringList& pathList)
 {
-	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
-	mPlayer.setMedia(QUrl::fromLocalFile(filePath));
+	mPlayer.setPlaylist(mPlayModel->Open(pathList));
 	mPlayer.play();
+
+	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
 }
 
 void MainWindow::OnSeekForward()
@@ -90,18 +91,7 @@ void MainWindow::_CreateActions()
 	mOpenFileAct->setShortcut(QKeySequence::Open);
 	mOpenFileAct->setStatusTip(
 		tr("Replace current playlist with chosen file(s), then start playing."));
-	connect(mOpenFileAct, &QAction::triggered, this, [&]() {
-		const QStringList musicPaths = QStandardPaths::standardLocations(
-			QStandardPaths::MusicLocation);
-		const auto dir = musicPaths.isEmpty() ? QDir::homePath() : musicPaths.first();
-
-		const QString filePath = QFileDialog::getOpenFileName(
-			this, tr("Open file"), dir, tr("MP3 files (*.mp3);;All files (*.*)"));
-
-		if (!filePath.isEmpty()) {
-			OnPlayFile(filePath);
-		}
-	});
+	connect(mOpenFileAct, &QAction::triggered, this, &MainWindow::_OnOpenFiles);
 
 	mExitAct = new QAction{ tr("E&xit"), this };
 	mExitAct->setShortcut(QKeySequence::Quit);
@@ -218,6 +208,21 @@ void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
 	const auto errStr = mPlayer.errorString();
 	SPLAY_LOG_CRITICAL(errStr.toStdString().c_str());
 	QMessageBox::critical(this, tr("SPlay error"), errStr);
+}
+
+void MainWindow::_OnOpenFiles()
+{
+	const QStringList audioPaths = QStandardPaths::standardLocations(
+		QStandardPaths::MusicLocation);
+	const auto dir = audioPaths.isEmpty() ?
+		QDir::homePath() : audioPaths.first();
+
+	const auto pathList = QFileDialog::getOpenFileNames(
+		this, tr("Open file"), dir, tr("MP3 files (*.mp3);;All files (*.*)"));
+
+	if (!pathList.isEmpty()) {
+		OnPlayFile(pathList);
+	}
 }
 
 void MainWindow::_OnSetPosition(int position)

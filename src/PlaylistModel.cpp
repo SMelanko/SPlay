@@ -8,19 +8,25 @@ namespace splay
 {
 
 PlaylistModel::PlaylistModel(QObject* parent)
-	: QAbstractTableModel(parent)
+	: QAbstractTableModel{ parent }
+	, mData{}
 {
-	// TODO only for testing.
-	mData.emplace_back(Track("0 Markus Schulz feat. Delacey", "Destiny", 110));
-	mData.emplace_back(Track("1 Photographer & Susana", "Find A Way", 109));
-	mData.emplace_back(Track("2 MaRLo feat. Jano", "The Dreamers", 108));
-	mData.emplace_back(Track("3 Matt Darey feat. Kate Louise Smith", "See The Sun (Dan Stone Rework)", 107));
-	mData.emplace_back(Track("4 Above & Beyond feat. Zoe Johnston", "We're All We Need", 106));
-	mData.emplace_back(Track("5 Omnia feat. Tilde", "For The First Time", 105));
-	mData.emplace_back(Track("6 Armin van Buuren feat. Eric Vloeimans", "Embrace", 104));
-	mData.emplace_back(Track("7 Armin van Buuren pres. Rising Star feat. Betsie Larkin", "Safe Inside You", 103));
-	mData.emplace_back(Track("8 Armin van Buuren & Jean Michel-Jarre", "Stardust (Armin van Buuren pres. Rising Star Remix", 102));
-	mData.emplace_back(Track("9 Ferry Corsten pres. Gouryella", "Anahera", 101));
+	mData.setPlaybackMode(QMediaPlaylist::Loop);
+}
+
+void PlaylistModel::Add(const QStringList& pathList)
+{
+	QList<QMediaContent> mediaList;
+
+	for (const auto& path : pathList) {
+		mediaList.push_back(QMediaContent{ path });
+	}
+
+	auto res = mData.addMedia(mediaList);
+
+	if (!res) {
+		throw std::runtime_error{ mData.errorString().toStdString() };
+	}
 }
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
@@ -39,10 +45,10 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 	const auto row(index.row());
 	const auto column(index.column());
 
-	if (row >= static_cast<int>(mData.size())) {
+	if (row >= static_cast<int>(mData.mediaCount())) {
 		return QVariant();
 	}
-
+#if 0
 	if (role == Qt::DisplayRole) {
 		switch (column) {
 		case 1:
@@ -53,7 +59,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 			return QVariant(mData[row].DurationStr());
 		}
 	}
-
+#endif
 	return QVariant();
 }
 
@@ -61,13 +67,16 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex& index) const
 {
 	auto defFlags = QAbstractTableModel::flags(index);
 
-	if (index.isValid())
+	if (index.isValid()) {
 		return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defFlags;
-	else
+	}
+	else {
 		return Qt::ItemIsDropEnabled | defFlags;
+	}
 }
 
-QVariant PlaylistModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant PlaylistModel::headerData(int section,
+	Qt::Orientation orientation, int role) const
 {
 	if (role == Qt::DisplayRole) {
 		if (orientation == Qt::Horizontal) {
@@ -97,19 +106,19 @@ QStringList PlaylistModel::mimeTypes() const
 void PlaylistModel::OnInsert(QStringList list)
 {
 	const QModelIndex parent = QModelIndex();
-	const auto row = mData.size();
+	const auto row = mData.mediaCount();
 	const auto cnt = list.size();
 
 	beginInsertRows(parent, row, row + cnt - 1);
 
 	for (const auto& path : list) {
-		mData.emplace_back(Track(path, "qwe", 123));
+		mData.addMedia(QMediaContent{ path });
 	}
 
 	endInsertRows();
 }
 
-void PlaylistModel::OnMove(RowsList selectedRows, int dest)
+void PlaylistModel::OnMove(RowList selectedRows, int dest)
 {
 	qDebug() << "PlaylistModel::OnMove: number = " << selectedRows.size() << " dest = " << dest;
 
@@ -125,17 +134,17 @@ void PlaylistModel::OnMove(RowsList selectedRows, int dest)
 	}
 
 	// Copy rows whose have been moved into the temporary vector.
-	Playlist tmp(num);
+	Playlist tmp;
 	for (int i = 0; i < num; ++i) {
-		tmp[i] = mData[selectedRows[i]];
+		tmp.addMedia(mData.media(selectedRows[i]));
 	}
 	// Delete moved rows from current playlist.
 	for (const auto& row : selectedRows) {
-		mData.erase(std::begin(mData) + row);
+		mData.removeMedia(row);
 	}
 
-	if (dest > static_cast<int>(mData.size()))
-		dest = mData.size();
+	if (dest > static_cast<int>(mData.mediaCount()))
+		dest = mData.mediaCount();
 
 	int coef = 0;
 	if (selectedRows[0] < dest) {
@@ -143,12 +152,13 @@ void PlaylistModel::OnMove(RowsList selectedRows, int dest)
 	}
 
 	// Move selected rows to the destination.
-	mData.insert(std::begin(mData) + dest + coef, std::begin(tmp), std::end(tmp));
+	//mData.insert(std::begin(mData) + dest + coef,
+	//	std::begin(tmp), std::end(tmp));
 
 	endMoveRows();
 }
 
-void PlaylistModel::OnRemove(RowsList selectedRows)
+void PlaylistModel::OnRemove(RowList selectedRows)
 {
 	int coef = 0;
 
@@ -161,7 +171,7 @@ void PlaylistModel::OnRemove(RowsList selectedRows)
 	auto oldModelIndex = QModelIndex();
 
 	for (const auto& row : selectedRows) {
-		mData.erase(std::cbegin(mData) + row - coef);
+		mData.removeMedia(row - coef);
 		++coef;
 	}
 
@@ -170,16 +180,34 @@ void PlaylistModel::OnRemove(RowsList selectedRows)
 	Q_EMIT layoutChanged();
 }
 
+Playlist* PlaylistModel::Open(const QStringList& pathList)
+{
+	_Clear();
+	Add(pathList);
+	mData.setCurrentIndex(0);
+
+	return &mData;
+}
+
 int PlaylistModel::rowCount(const QModelIndex& parent) const
 {
 	// Note! When implementing a table based model,
 	// rowCount() should return 0 when the parent is valid.
-	return parent.isValid() ? 0 : mData.size();
+	return parent.isValid() ? 0 : mData.mediaCount();
 }
 
 Qt::DropActions PlaylistModel::supportedDropActions() const
 {
 	return Qt::CopyAction | Qt::MoveAction;
+}
+
+void PlaylistModel::_Clear()
+{
+	auto res = mData.clear();
+
+	if (!res) {
+		throw std::runtime_error{ mData.errorString().toStdString() };
+	}
 }
 
 } // namespace splay

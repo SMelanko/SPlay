@@ -142,9 +142,9 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 	// and if it is true, will save new section settings.
 }
 
-RowsList PlaylistView::_GetSelectedRows() const Q_DECL_NOEXCEPT
+RowList PlaylistView::_GetSelectedRows() const Q_DECL_NOEXCEPT
 {
-	RowsList selectedRows;
+	RowList selectedRows;
 	const auto indexes = selectionModel()->selectedRows();
 
 	for (const auto& index : indexes) {

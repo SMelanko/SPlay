@@ -29,9 +29,9 @@ Q_SIGNALS:
 	//! Emits the signal for adding new tracks via drag and drop operation.
 	void Insert(QStringList list);
 	//! Emits the signal when internal moving of the rows is executed.
-	void Move(const RowsList selectedRows, int dest);
+	void Move(const RowList selectedRows, int dest);
 	//! Emits the signal for removing the rows.
-	void Remove(const RowsList selectedRows);
+	void Remove(const RowList selectedRows);
 
 protected:
 	//! Handles event that is sent to the current widget when a drag action enters it.
@@ -53,7 +53,7 @@ private Q_SLOTS:
 
 private:
 	//! Returns a list of rows whose have been selected.
-	RowsList _GetSelectedRows() const Q_DECL_NOEXCEPT;
+	RowList _GetSelectedRows() const Q_DECL_NOEXCEPT;
 	//! Creates custom style sheet for the widget.
 	QString _Qss() const Q_DECL_NOEXCEPT;
 
