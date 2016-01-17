@@ -1,7 +1,7 @@
 # This module finds the taglib library.
 #
 # Usage:
-#	find_package(taglib)
+#	find_package(Taglib)
 #
 # On completion, the script defines the following variables:
 #	
@@ -29,7 +29,11 @@ set(taglib_include_dirs
 	${taglib_root}/taglib/mpeg/id3v2
 	${taglib_root}/bindings/c/)
 
-set(taglib_lib_name "tag.lib")
+if (WIN32)
+	set(taglib_lib_name "tag.lib")
+else ()
+	set(taglib_lib_name "libtag.a")
+endif ()
 
 if (CMAKE_CL_64)
 	set(taglib_lib_path ${taglib_root}/lib/x64)
@@ -46,7 +50,7 @@ find_library(
 )
 
 if (NOT taglib_debug_lib)
-		message(FATAL_ERROR "${taglib_lib_name} for debug not found!")
+		message(FATAL_ERROR "${taglib_lib_name} for debug not found in ${taglib_lib_path}")
 endif ()
 
 find_library(
@@ -58,7 +62,7 @@ find_library(
 )
 
 if (NOT taglib_release_lib)
-		message(FATAL_ERROR "${taglib_lib_name} for release not found!")
+		message(FATAL_ERROR "${taglib_lib_name} for release not found in ${taglib_lib_path}")
 endif ()
 
 list(APPEND taglib_libraries "optimized" ${taglib_release_lib})
