@@ -11,6 +11,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -pthread")
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 if(MSVC)
 	add_definitions(/W3)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
@@ -44,8 +46,14 @@ if(Qt5Widgets_FOUND AND Qt5Multimedia_FOUND)
 		get_filename_component(Qt_BIN_DIR "${_Qt5_Core_LOCATION}" PATH)
 	endif()
 else()
-	message(FATAL_ERROR "Qt5 package was not found")
+	message(FATAL_ERROR "The Qt5 package was not found")
 endif()
+
+find_package(taglib)
+
+if (NOT taglib_found)
+	message(FATAL_ERROR "The taglib library was not found")
+endif ()
 
 set(INCLUDE_LIST
 	include/Application.h
@@ -91,7 +99,8 @@ set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${external_INCLUDE_DIRS})
+	${external_INCLUDE_DIRS}
+	${taglib_include_dirs})
 
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 	${INCLUDE_LIST}
@@ -102,6 +111,7 @@ add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 target_link_libraries(${PROJECT_NAME}
 	${Qt5Core_QTMAIN_LIBRARIES}
 	${CMake_QT_LIBRARIES}
+	${taglib_libraries}
 )
 	
 if(Qt_BIN_DIR)
