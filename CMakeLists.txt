@@ -51,7 +51,9 @@ endif()
 
 find_package(taglib)
 
-if (NOT taglib_found)
+if (taglib_found)
+	add_definitions(-DTAGLIB_STATIC)
+else ()
 	message(FATAL_ERROR "The taglib library was not found")
 endif ()
 

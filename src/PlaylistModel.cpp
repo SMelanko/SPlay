@@ -1,5 +1,7 @@
 #include "PlaylistModel.h"
 
+#include <fileref.h>
+
 #include <QDataStream>
 #include <QDebug>
 #include <QMimeData>
@@ -22,11 +24,18 @@ void PlaylistModel::Add(const QStringList& pathList)
 		mediaList.push_back(QMediaContent{ path });
 	}
 
+	Q_EMIT layoutAboutToBeChanged();
+
+	auto oldModelIndex = QModelIndex();
 	auto res = mData.addMedia(mediaList);
 
 	if (!res) {
 		throw std::runtime_error{ mData.errorString().toStdString() };
 	}
+
+	changePersistentIndex(oldModelIndex, QModelIndex());
+
+	Q_EMIT layoutChanged();
 }
 
 int PlaylistModel::columnCount(const QModelIndex& parent) const
@@ -48,18 +57,29 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 	if (row >= static_cast<int>(mData.mediaCount())) {
 		return QVariant();
 	}
-#if 0
+
+	TagLib::FileRef f{ mData.media(row).canonicalUrl().toString().toStdString().c_str() };
+
 	if (role == Qt::DisplayRole) {
 		switch (column) {
-		case 1:
-			return QVariant(mData[row].Author());
-		case 2:
-			return QVariant(mData[row].Title());
-		case 3:
-			return QVariant(mData[row].DurationStr());
+		case 1: {
+			if (!f.isNull() && f.tag()) {
+				return QVariant(f.tag()->artist().toCString());
+			}
+		}
+		case 2: {
+			if (!f.isNull() && f.tag()) {
+				return QVariant(f.tag()->title().toCString());
+			}
+		}
+		case 3: {
+			if (!f.isNull() && f.audioProperties()) {
+				return QVariant(f.audioProperties()->length());
+			}
+		}
 		}
 	}
-#endif
+
 	return QVariant();
 }
 
@@ -182,7 +202,9 @@ void PlaylistModel::OnRemove(RowList selectedRows)
 
 Playlist* PlaylistModel::Open(const QStringList& pathList)
 {
-	_Clear();
+	if (mData.mediaCount() > 0) {
+		_Clear();
+	}
 	Add(pathList);
 	mData.setCurrentIndex(0);
 
@@ -203,11 +225,19 @@ Qt::DropActions PlaylistModel::supportedDropActions() const
 
 void PlaylistModel::_Clear()
 {
+	Q_EMIT layoutAboutToBeChanged();
+
+	auto oldModelIndex = QModelIndex();
+
 	auto res = mData.clear();
 
 	if (!res) {
 		throw std::runtime_error{ mData.errorString().toStdString() };
 	}
+
+	changePersistentIndex(oldModelIndex, QModelIndex());
+
+	Q_EMIT layoutChanged();
 }
 
 } // namespace splay
