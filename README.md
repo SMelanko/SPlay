@@ -1,6 +1,6 @@
 # SPlay
 
-<img src="https://raw.github.com/SMelanko/STest/master/res/Icons/btn_play.png" align="right"/><p>SPlay project.</p>
+<img src="https://raw.github.com/SMelanko/STest/master/res/Icons/btn_play.png" align="right"/><p>My SPlay test project.</p>
 
 
 ## Additional libraries
@@ -12,4 +12,4 @@
 
 ## The latest snapshot
 
-<img src="https://raw.github.com/SMelanko/STest/master/snap/2016_01_01.png" align="right"/><p>My test project.</p>
+<p align="center"><img src="https://raw.github.com/SMelanko/STest/master/snap/2016_01_01.png"/></p>
