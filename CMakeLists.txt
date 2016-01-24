@@ -21,6 +21,9 @@ else()
 	message("Unknown compiler")
 endif()
 
+#
+# FInd Qt5 framework.
+#
 find_package(Qt5Widgets)
 find_package(Qt5Multimedia)
 
@@ -49,13 +52,24 @@ else()
 	message(FATAL_ERROR "The Qt5 package was not found")
 endif()
 
+#
+# Find TagLib library.
+#
 find_package(Taglib)
 
 if (taglib_found)
 	add_definitions(-DTAGLIB_STATIC)
+	if(UNIX)
+		set(TagSrcFile "${taglib_root}/taglib/mpeg/id3v2/id3v2frame.cpp")
+	endif()
 else ()
 	message(FATAL_ERROR "The taglib library was not found")
 endif ()
+
+#
+# Third party include derictories.
+#
+set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
 set(INCLUDE_LIST
 	include/Application.h
@@ -64,7 +78,6 @@ set(INCLUDE_LIST
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/Slider.h
-#	include/Track.h
 	include/Types.h
 	include/VolumeButton.h)
 
@@ -76,7 +89,6 @@ set(SRC_LIST
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
 	src/Slider.cpp
-#	src/Track.cpp
 	src/VolumeButton.cpp)
 
 qt5_wrap_cpp(MOC_SRC_LIST
@@ -94,11 +106,6 @@ source_group("Source Files" FILES ${SRC_LIST})
 source_group("Source Files\\MOC" FILES ${MOC_SRC_LIST})
 source_group("Resource Files" FILES ${RES_LIST})
 
-#
-# Third party include derictories.
-#
-set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
-
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${external_INCLUDE_DIRS}
@@ -108,14 +115,12 @@ add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 	${INCLUDE_LIST}
 	${SRC_LIST}
 	${MOC_SRC_LIST}
-	${RES_LIST})
+	${RES_LIST}
+	${TagSrcFile} # Some miracle
+	)
 
 target_link_libraries(${PROJECT_NAME}
 	${Qt5Core_QTMAIN_LIBRARIES}
 	${CMake_QT_LIBRARIES}
 	${taglib_libraries}
 )
-	
-if(Qt_BIN_DIR)
-	set_property(TARGET ${PROJECT_NAME} PROPERTY Qt_BIN_DIR ${Qt_BIN_DIR})
-endif()

@@ -21,7 +21,7 @@ void PlaylistModel::Add(const QStringList& pathList)
 	QList<QMediaContent> mediaList;
 
 	for (const auto& path : pathList) {
-		mediaList.push_back(QMediaContent{ path });
+		mediaList.push_back(QMediaContent{ QUrl::fromLocalFile(path) });
 	}
 
 	Q_EMIT layoutAboutToBeChanged();
@@ -58,7 +58,7 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 		return QVariant();
 	}
 
-	TagLib::FileRef f{ mData.media(row).canonicalUrl().toString().toStdString().c_str() };
+	TagLib::FileRef f{ mData.media(row).canonicalUrl().toLocalFile().toStdString().c_str() };
 
 	if (role == Qt::DisplayRole) {
 		switch (column) {
