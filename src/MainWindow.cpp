@@ -3,7 +3,7 @@
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
 #include "Slider.h"
-#include "VolumeButton.h"
+#include "VolumeWidget.h"
 
 #include <QAction>
 #include <QApplication>
@@ -113,79 +113,85 @@ void MainWindow::_CreateActions()
 
 void MainWindow::_CreateCentralWgt()
 {
-	QWidget* cw{ new QWidget };
+	mPlayModel = new PlaylistModel{};
+
+	QWidget* cw{ new QWidget{ this } };
 	setCentralWidget(cw);
 
-	QBoxLayout* ml{ new QVBoxLayout };
+	QBoxLayout* mainLayout{ new QVBoxLayout };
 
-	QBoxLayout* al{ new QHBoxLayout };
+	QBoxLayout* controlLayout{ new QHBoxLayout };
 
-	QHBoxLayout* left{ new QHBoxLayout };
-	mVolBtn = new VolumeButton(this);
-	mVolBtn->setToolTip(tr("Adjust volume"));
-	mVolBtn->SetVolume(mPlayer.volume());
-	connect(mVolBtn, &VolumeButton::VolumeChanged,
-		&mPlayer, &QMediaPlayer::setVolume);
-	left->addWidget(mVolBtn);
-	left->addStretch();
+	QHBoxLayout* controlLeftLayout{ new QHBoxLayout };
+	QLabel* tmp{ new QLabel{ this } }; // TODO
+	controlLeftLayout->addWidget(tmp);
+	controlLeftLayout->addStretch();
 
-	al->addLayout(left);
+	controlLayout->addLayout(controlLeftLayout);
 
-	QHBoxLayout* center{ new QHBoxLayout };
-	mBackwardBtn = new QPushButton{ this };
-	mBackwardBtn->setEnabled(true);
-	mBackwardBtn->setFixedSize(36, 36);
-	mBackwardBtn->setIcon(QIcon{ ":/btn_rewind" });
-	mBackwardBtn->setIconSize(QSize{ 28, 28 });
-	mBackwardBtn->setToolTip(tr("Previous"));
-	center->addWidget(mBackwardBtn);
-	center->addSpacing(15);
+	QHBoxLayout* controlCenterLayout{ new QHBoxLayout };
+	mPrevBtn = new QPushButton{ this };
+	mPrevBtn->setFixedSize(36, 36);
+	mPrevBtn->setIcon(QIcon{ ":/btn_rewind" });
+	mPrevBtn->setIconSize(QSize{ 28, 28 });
+	mPrevBtn->setToolTip(tr("Previous"));
+	connect(mPrevBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnPrevious);
+	controlCenterLayout->addWidget(mPrevBtn);
+	controlCenterLayout->addSpacing(15);
 
 	mPlayBtn = new QPushButton{ this };
-	mPlayBtn->setEnabled(true);
 	mPlayBtn->setFixedSize(50, 50);
 	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setToolTip(tr("Play"));
 	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
-	center->addWidget(mPlayBtn);
-	center->addSpacing(15);
+	controlCenterLayout->addWidget(mPlayBtn);
+	controlCenterLayout->addSpacing(15);
 
-	mForwardBtn = new QPushButton{ this };
-	mForwardBtn->setEnabled(true);
-	mForwardBtn->setFixedSize(36, 36);
-	mForwardBtn->setIcon(QIcon{ ":/btn_forward" });
-	mForwardBtn->setIconSize(QSize{ 28, 28 });
-	mForwardBtn->setToolTip(tr("Next"));
-	center->addWidget(mForwardBtn);
+	mNextBtn = new QPushButton{ this };
+	mNextBtn->setFixedSize(36, 36);
+	mNextBtn->setIcon(QIcon{ ":/btn_forward" });
+	mNextBtn->setIconSize(QSize{ 28, 28 });
+	mNextBtn->setToolTip(tr("Next"));
+	connect(mNextBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnNext);
+	controlCenterLayout->addWidget(mNextBtn);
 
-	al->addLayout(center);
+	controlLayout->addLayout(controlCenterLayout);
 
-	QHBoxLayout* right{ new QHBoxLayout };
-	right->addStretch();
+	QHBoxLayout* controlRightLayout{ new QHBoxLayout };
+	controlRightLayout->addStretch();
+	mVolBtn = new VolumeWidget(this);
+	mVolBtn->setMinimumWidth(150);
+	mVolBtn->setToolTip(tr("Adjust volume"));
+	mVolBtn->SetVolume(mPlayer.volume());
+	connect(mVolBtn, &VolumeWidget::VolumeChanged, &mPlayer, &QMediaPlayer::setVolume);
+	controlRightLayout->addWidget(mVolBtn);
+
+	controlLayout->addLayout(controlRightLayout);
+	mainLayout->addLayout(controlLayout);
+
+	QHBoxLayout* timeLayout{ new QHBoxLayout };
+	timeLayout->setMargin(0);
+	timeLayout->addStretch();
 	mTimeLbl = new QLabel{ tr("00:00"), this };
 	mTimeLbl->setAlignment(Qt::AlignCenter);
-	mTimeLbl->setFixedSize(68, 36);
-	mTimeLbl->setStyleSheet("border: 1px solid #357EC7; border-radius: 3px;");
-	right->addWidget(mTimeLbl);
+	timeLayout->addWidget(mTimeLbl);
+	timeLayout->addSpacing(15);
 
-	al->addLayout(right);
-
-	ml->addLayout(al);
+	mainLayout->addLayout(timeLayout);
 
 	mPosSldr = new Slider{ Qt::Horizontal, this };
 	connect(mPosSldr, &QSlider::valueChanged, this, &MainWindow::_OnSetPosition);
-	ml->addWidget(mPosSldr);
+	mainLayout->addWidget(mPosSldr);
 
-	mPlayModel = new PlaylistModel{};
 	mPlayView = new PlaylistView{ this };
 	mPlayView->setModel(mPlayModel);
 	connect(mPlayView, &PlaylistView::Insert, mPlayModel, &PlaylistModel::OnInsert);
 	connect(mPlayView, &PlaylistView::Move, mPlayModel, &PlaylistModel::OnMove);
 	connect(mPlayView, &PlaylistView::Remove, mPlayModel, &PlaylistModel::OnRemove);
-	ml->addWidget(mPlayView);
+	mainLayout->addWidget(mPlayView);
 
-	centralWidget()->setLayout(ml);
+	centralWidget()->setLayout(mainLayout);
 }
 
 void MainWindow::_CreateMenu()

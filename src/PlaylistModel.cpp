@@ -178,6 +178,16 @@ void PlaylistModel::OnMove(RowList selectedRows, int dest)
 	endMoveRows();
 }
 
+void PlaylistModel::OnNext()
+{
+	mData.next();
+}
+
+void PlaylistModel::OnPrevious()
+{
+	mData.previous();
+}
+
 void PlaylistModel::OnRemove(RowList selectedRows)
 {
 	int coef = 0;

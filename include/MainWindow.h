@@ -17,7 +17,7 @@ namespace splay
 class PlaylistModel;
 class PlaylistView;
 class Slider;
-class VolumeButton;
+class VolumeWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -51,7 +51,7 @@ private:
 	void _CreateMenu();
 
 private Q_SLOTS:
-	//! Shows a string describling the last error condition.
+	//! Shows a string describing the last error condition.
 	void _OnHandleError() Q_DECL_NOEXCEPT;
 	//! Opens new audio files.
 	void _OnOpenFiles();
@@ -66,13 +66,13 @@ private:
 	//! Play/pause button.
 	QAbstractButton* mPlayBtn;
 	//! Skip backward button.
-	QAbstractButton* mBackwardBtn;
+	QAbstractButton* mPrevBtn;
 	//! Skip forward button.
-	QAbstractButton* mForwardBtn;
+	QAbstractButton* mNextBtn;
 	//! Seek slider.
 	Slider* mPosSldr;
 	//! Volume button.
-	VolumeButton* mVolBtn;
+	VolumeWidget* mVolBtn;
 	//! Playlist table model.
 	PlaylistModel* mPlayModel;
 	//! Playlist table view.

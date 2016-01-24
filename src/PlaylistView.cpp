@@ -1,5 +1,4 @@
 #include "PlaylistView.h"
-#include "Track.h"
 
 #include <QHeaderView>
 #include <QKeyEvent>

@@ -3,16 +3,14 @@
 #ifndef _SPLAY_VOLUME_BUTTON_H_
 #define _SPLAY_VOLUME_BUTTON_H_
 
-#include <QToolButton>
+#include <QWidget>
 
-QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QSlider)
 
 namespace splay
 {
 
-class VolumeButton : public QToolButton
+class VolumeWidget : public QWidget
 {
 	Q_OBJECT
 
@@ -20,7 +18,7 @@ class VolumeButton : public QToolButton
 
 public:
 	//! Constructor.
-	VolumeButton(QWidget* parent = Q_NULLPTR);
+	VolumeWidget(QWidget* parent = Q_NULLPTR);
 
 public:
 	//! Returns current volume value.
@@ -39,11 +37,7 @@ Q_SIGNALS:
 	void VolumeChanged(int volume);
 
 private:
-	//! Button label.
-	QLabel* mLabel;
-	//! Menu.
-	QMenu* mMenu;
-	//! Widget for changing volume value.
+	//! Slider for the volume changing.
 	QSlider* mSlider;
 };
 

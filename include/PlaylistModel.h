@@ -34,6 +34,10 @@ public Q_SLOTS:
 	void OnInsert(QStringList list);
 	//! TODO Executes internal moving of the rows.
 	void OnMove(RowList selectedRows, int dest);
+	//! Advances to the next media content in playlist.
+	void OnNext();
+	//! Advances to the previous media content in playlist.
+	void OnPrevious();
 	//! TODO Remove specified rows from view.
 	void OnRemove(RowList selectedRows);
 

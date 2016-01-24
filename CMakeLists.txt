@@ -79,7 +79,7 @@ set(INCLUDE_LIST
 	include/PlaylistView.h
 	include/Slider.h
 	include/Types.h
-	include/VolumeButton.h)
+	include/VolumeWidget.h)
 
 set(SRC_LIST
 	src/Application.cpp
@@ -89,14 +89,14 @@ set(SRC_LIST
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
 	src/Slider.cpp
-	src/VolumeButton.cpp)
+	src/VolumeWidget.cpp)
 
 qt5_wrap_cpp(MOC_SRC_LIST
 	include/Application.h
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
-	include/VolumeButton.h)
+	include/VolumeWidget.h)
 
 qt5_add_resources(RES_LIST
 	res/SPlay.qrc)
