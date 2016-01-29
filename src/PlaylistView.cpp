@@ -84,7 +84,7 @@ void PlaylistView::dropEvent(QDropEvent* event)
 		auto urlList = event->mimeData()->urls();
 
 		for (const auto& url : urlList) {
-			list.push_back(url.fileName());
+			list.push_back(url.path());
 		}
 
 		event->acceptProposedAction();

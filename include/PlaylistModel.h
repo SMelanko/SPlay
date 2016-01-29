@@ -28,10 +28,12 @@ public:
 	void Add(const QStringList& pathList);
 	//! Opens new list of the media files and removes previous one.
 	Playlist* Open(const QStringList& pathList);
+	//! Returns playlist pointer.
+	Playlist* PlaylistPtr() Q_DECL_NOEXCEPT;
 
 public Q_SLOTS:
 	//! TODO Inserts tracks into the end of model.
-	void OnInsert(QStringList list);
+	void OnInsert(QStringList pathList);
 	//! TODO Executes internal moving of the rows.
 	void OnMove(RowList selectedRows, int dest);
 	//! Advances to the next media content in playlist.
@@ -66,6 +68,14 @@ private:
 	Playlist mData;
 };
 
+//
+// Inline implementation.
+//
+
+inline Playlist* PlaylistModel::PlaylistPtr() Q_DECL_NOEXCEPT
+{
+	return &mData;
+}
 } // namespace splay
 
 #endif // _SPLAY_PLAYLIST_MODEL_H_

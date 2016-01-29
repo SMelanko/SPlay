@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget* parent)
 	resize(640, 480);
 	setWindowTitle("SPlay");
 
+	mPlayModel = new PlaylistModel{};
+	mPlayer.setPlaylist(mPlayModel->PlaylistPtr());
+
 	_CreateActions();
 	_CreateMenu();
 	_CreateCentralWgt();
@@ -113,8 +116,6 @@ void MainWindow::_CreateActions()
 
 void MainWindow::_CreateCentralWgt()
 {
-	mPlayModel = new PlaylistModel{};
-
 	QWidget* cw{ new QWidget{ this } };
 	setCentralWidget(cw);
 

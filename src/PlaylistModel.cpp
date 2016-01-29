@@ -123,19 +123,20 @@ QStringList PlaylistModel::mimeTypes() const
 	return types;
 }
 
-void PlaylistModel::OnInsert(QStringList list)
+void PlaylistModel::OnInsert(QStringList pathList)
 {
-	const QModelIndex parent = QModelIndex();
-	const auto row = mData.mediaCount();
-	const auto cnt = list.size();
+	auto start = mData.mediaCount() - 1;
+	auto end = start + pathList.size();
 
-	beginInsertRows(parent, row, row + cnt - 1);
+	Q_EMIT mData.mediaAboutToBeInserted(start, end);
 
-	for (const auto& path : list) {
-		mData.addMedia(QMediaContent{ path });
+	Add(pathList);
+
+	if (mData.currentIndex() == -1) {
+		mData.setCurrentIndex(0);
 	}
 
-	endInsertRows();
+	Q_EMIT mData.mediaInserted(start, end);
 }
 
 void PlaylistModel::OnMove(RowList selectedRows, int dest)
