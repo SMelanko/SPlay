@@ -27,7 +27,7 @@ public:
 
 Q_SIGNALS:
 	//! Emits the signal for adding new tracks via drag and drop operation.
-	void Insert(QStringList list);
+	void Insert(AudioUrls urls);
 	//! Emits the signal when internal moving of the rows is executed.
 	void Move(const RowList selectedRows, int dest);
 	//! Emits the signal for removing the rows.

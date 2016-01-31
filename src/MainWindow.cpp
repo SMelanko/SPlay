@@ -53,14 +53,6 @@ MainWindow::~MainWindow()
 	delete mPlayModel;
 }
 
-void MainWindow::OnPlayFile(const QStringList& pathList)
-{
-	mPlayer.setPlaylist(mPlayModel->Open(pathList));
-	mPlayer.play();
-
-	mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
-}
-
 void MainWindow::OnSeekForward()
 {
 	qDebug() << "triggerAction(QSlider::SliderPageStepAdd);";
@@ -176,6 +168,7 @@ void MainWindow::_CreateCentralWgt()
 	timeLayout->addStretch();
 	mTimeLbl = new QLabel{ tr("00:00"), this };
 	mTimeLbl->setAlignment(Qt::AlignCenter);
+	mTimeLbl->setToolTip(tr("Playback time"));
 	timeLayout->addWidget(mTimeLbl);
 	timeLayout->addSpacing(15);
 
@@ -224,11 +217,12 @@ void MainWindow::_OnOpenFiles()
 	const auto dir = audioPaths.isEmpty() ?
 		QDir::homePath() : audioPaths.first();
 
-	const auto pathList = QFileDialog::getOpenFileNames(
-		this, tr("Open file"), dir, tr("MP3 files (*.mp3);;All files (*.*)"));
+	const auto urls = QFileDialog::getOpenFileUrls(this,
+		tr("Open file"), QUrl::fromLocalFile(dir), tr("MP3 files (*.mp3);;All files (*.*)"));
 
-	if (!pathList.isEmpty()) {
-		OnPlayFile(pathList);
+	if (!urls.isEmpty()) {
+		mPlayModel->Open(urls);
+		OnTogglePlayback();
 	}
 }
 

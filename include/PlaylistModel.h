@@ -25,15 +25,15 @@ public:
 
 public:
 	//! Adds media content items to the playlist.
-	void Add(const QStringList& pathList);
+	void Add(const AudioUrls& urls);
 	//! Opens new list of the media files and removes previous one.
-	Playlist* Open(const QStringList& pathList);
+	void Open(const AudioUrls& urls);
 	//! Returns playlist pointer.
 	Playlist* PlaylistPtr() Q_DECL_NOEXCEPT;
 
 public Q_SLOTS:
 	//! TODO Inserts tracks into the end of model.
-	void OnInsert(QStringList pathList);
+	void OnInsert(AudioUrls urls);
 	//! TODO Executes internal moving of the rows.
 	void OnMove(RowList selectedRows, int dest);
 	//! Advances to the next media content in playlist.

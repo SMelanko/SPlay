@@ -1,4 +1,5 @@
 #include "PlaylistModel.h"
+#include "Utils.h"
 
 #include <fileref.h>
 
@@ -16,20 +17,13 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	mData.setPlaybackMode(QMediaPlaylist::Loop);
 }
 
-void PlaylistModel::Add(const QStringList& pathList)
+void PlaylistModel::Add(const AudioUrls& urls)
 {
-	QList<QMediaContent> mediaList;
-
-	for (const auto& path : pathList) {
-		mediaList.push_back(QMediaContent{ QUrl::fromLocalFile(path) });
-	}
-
 	Q_EMIT layoutAboutToBeChanged();
 
 	auto oldModelIndex = QModelIndex();
-	auto res = mData.addMedia(mediaList);
 
-	if (!res) {
+	if (!mData.addMedia(utils::FromUrlList(urls))) {
 		throw std::runtime_error{ mData.errorString().toStdString() };
 	}
 
@@ -123,20 +117,13 @@ QStringList PlaylistModel::mimeTypes() const
 	return types;
 }
 
-void PlaylistModel::OnInsert(QStringList pathList)
+void PlaylistModel::OnInsert(AudioUrls urls)
 {
-	auto start = mData.mediaCount() - 1;
-	auto end = start + pathList.size();
-
-	Q_EMIT mData.mediaAboutToBeInserted(start, end);
-
-	Add(pathList);
+	Add(urls);
 
 	if (mData.currentIndex() == -1) {
 		mData.setCurrentIndex(0);
 	}
-
-	Q_EMIT mData.mediaInserted(start, end);
 }
 
 void PlaylistModel::OnMove(RowList selectedRows, int dest)
@@ -211,15 +198,15 @@ void PlaylistModel::OnRemove(RowList selectedRows)
 	Q_EMIT layoutChanged();
 }
 
-Playlist* PlaylistModel::Open(const QStringList& pathList)
+void PlaylistModel::Open(const AudioUrls& urls)
 {
 	if (mData.mediaCount() > 0) {
 		_Clear();
 	}
-	Add(pathList);
-	mData.setCurrentIndex(0);
 
-	return &mData;
+	Add(urls);
+
+	mData.setCurrentIndex(0);
 }
 
 int PlaylistModel::rowCount(const QModelIndex& parent) const
@@ -240,9 +227,7 @@ void PlaylistModel::_Clear()
 
 	auto oldModelIndex = QModelIndex();
 
-	auto res = mData.clear();
-
-	if (!res) {
+	if (!mData.clear()) {
 		throw std::runtime_error{ mData.errorString().toStdString() };
 	}
 

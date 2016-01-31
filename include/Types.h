@@ -10,6 +10,7 @@
 namespace splay
 {
 
+using AudioUrls = QList<QUrl> ;
 using Playlist = QMediaPlaylist;
 using RowList = std::vector<int>;
 

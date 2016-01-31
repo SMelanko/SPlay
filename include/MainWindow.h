@@ -33,8 +33,6 @@ public:
 	Q_DISABLE_COPY(MainWindow)
 
 public Q_SLOTS:
-	//! Plays a chosen track.
-	void OnPlayFile(const QStringList& pathList);
 	//! Triggers a slider action.
 	void OnSeekForward();
 	//! Triggers a slider action.

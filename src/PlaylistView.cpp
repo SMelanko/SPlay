@@ -43,11 +43,13 @@ PlaylistView::PlaylistView(QWidget* parent)
 	setDragEnabled(true);
 	setAcceptDrops(true);
 	setDragDropMode(QTableView::InternalMove);
-	//setDropIndicatorShown(true);
+	setDropIndicatorShown(true);
 
 	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkick);
-	connect(horizontalHeader(), &QHeaderView::sectionClicked, this, &PlaylistView::OnSectionClicked);
-	connect(horizontalHeader(), &QHeaderView::sectionResized, this, &PlaylistView::OnSectionResized);
+	connect(horizontalHeader(), &QHeaderView::sectionClicked,
+		this, &PlaylistView::OnSectionClicked);
+	connect(horizontalHeader(), &QHeaderView::sectionResized,
+		this, &PlaylistView::OnSectionResized);
 }
 
 void PlaylistView::dragEnterEvent(QDragEnterEvent* event)
@@ -78,18 +80,9 @@ void PlaylistView::dropEvent(QDropEvent* event)
 		Q_EMIT Move(_GetSelectedRows(), dest);
 	}
 	else {
-		qDebug() << "PlaylistView::dropEvent: external drop event";
-
-		QStringList list;
-		auto urlList = event->mimeData()->urls();
-
-		for (const auto& url : urlList) {
-			list.push_back(url.path());
-		}
-
 		event->acceptProposedAction();
 
-		Q_EMIT Insert(list);
+		Q_EMIT Insert(event->mimeData()->urls());
 	}
 }
 
