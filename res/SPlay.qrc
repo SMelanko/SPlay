@@ -5,6 +5,7 @@
         <file alias="btn_play">Icons/btn_play.png</file>
         <file alias="btn_rewind">Icons/btn_rewind.png</file>
         <file alias="btn_volume">Icons/btn_volume.png</file>
+        <file alias="playing_icon">Icons/playing_icon.png</file>
     </qresource>
     <qresource prefix="/logo">
         <file>splay_16.png</file>
