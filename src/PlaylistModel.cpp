@@ -6,6 +6,7 @@
 #include <QDataStream>
 #include <QDebug>
 #include <QMimeData>
+#include <QPixmap>
 
 namespace splay
 {
@@ -15,6 +16,9 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	, mData{}
 {
 	mData.setPlaybackMode(QMediaPlaylist::Loop);
+
+	connect(&mData, &QMediaPlaylist::currentIndexChanged,
+		this, &PlaylistModel::OnCurrentIndexChanged);
 }
 
 void PlaylistModel::Add(const AudioUrls& urls)
@@ -56,21 +60,25 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 
 	if (role == Qt::DisplayRole) {
 		switch (column) {
-		case 1: {
-			if (!f.isNull() && f.tag()) {
-				return QVariant(f.tag()->artist().toCString());
+			case 1: {
+				if (!f.isNull() && f.tag()) {
+					return QVariant(f.tag()->artist().toCString());
+				}
+			}
+			case 2: {
+				if (!f.isNull() && f.tag()) {
+					return QVariant(f.tag()->title().toCString());
+				}
+			}
+			case 3: {
+				if (!f.isNull() && f.audioProperties()) {
+					return QVariant(f.audioProperties()->length());
+				}
 			}
 		}
-		case 2: {
-			if (!f.isNull() && f.tag()) {
-				return QVariant(f.tag()->title().toCString());
-			}
-		}
-		case 3: {
-			if (!f.isNull() && f.audioProperties()) {
-				return QVariant(f.audioProperties()->length());
-			}
-		}
+	} else if (role == Qt::DecorationRole) {
+		if (row == mData.currentIndex() && column == 0) {
+			return QPixmap{ ":/playing_icon" };
 		}
 	}
 
@@ -115,6 +123,16 @@ QStringList PlaylistModel::mimeTypes() const
 	QStringList types;
 	types << "application/splay-track";
 	return types;
+}
+
+void PlaylistModel::OnCurrentIndexChanged(int pos)
+{
+	auto cnt = mData.mediaCount();
+
+	if (cnt > 0) {
+		Q_EMIT dataChanged(index(0, 0),
+			index(cnt - 1, 0), { Qt::DecorationRole });
+	}
 }
 
 void PlaylistModel::OnInsert(AudioUrls urls)
