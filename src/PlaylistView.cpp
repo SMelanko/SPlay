@@ -45,7 +45,7 @@ PlaylistView::PlaylistView(QWidget* parent)
 	setDragDropMode(QTableView::InternalMove);
 	setDropIndicatorShown(true);
 
-	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkick);
+	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkicked);
 	connect(horizontalHeader(), &QHeaderView::sectionClicked,
 		this, &PlaylistView::OnSectionClicked);
 	connect(horizontalHeader(), &QHeaderView::sectionResized,
@@ -89,27 +89,29 @@ void PlaylistView::dropEvent(QDropEvent* event)
 void PlaylistView::keyPressEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
-		qDebug() << "PlaylistView::keyPressEvent: play " << currentIndex().row();
-	}
-	else if (event->key() == Qt::Key_Delete) {
+		if (selectionModel()->hasSelection()) {
+			auto rows = selectionModel()->selectedRows();
+			if (rows.size() == 1) {
+				Q_EMIT MediaIndexChanged(currentIndex().row());
+				selectionModel()->clearSelection();
+			}
+		}
+	} else if (event->key() == Qt::Key_Delete) {
 		if (selectionModel()->hasSelection()) {
 			Q_EMIT Remove(_GetSelectedRows());
 			selectionModel()->clearSelection();
 		}
-	}
-	else if (event->key() == Qt::Key_Space) {
+	} else if (event->key() == Qt::Key_Space) {
 		qDebug() << "PlaylistView::keyPressEvent: pause " << currentIndex().row();
-	}
-	else {
+	} else {
 		QTableView::keyPressEvent(event);
 	}
 }
 
-void PlaylistView::OnDoubleCkick(const QModelIndex& index)
+void PlaylistView::OnDoubleCkicked(const QModelIndex& index)
 {
-	// Get current track.
-	// Delete playing indicator.
 	qDebug() << "PlaylistView::OnDoubleCkick: row = " << index.row();
+	Q_EMIT MediaIndexChanged(index.row());
 }
 
 void PlaylistView::OnSectionClicked(int index)

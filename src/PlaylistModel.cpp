@@ -18,7 +18,7 @@ PlaylistModel::PlaylistModel(QObject* parent)
 	mData.setPlaybackMode(QMediaPlaylist::Loop);
 
 	connect(&mData, &QMediaPlaylist::currentIndexChanged,
-		this, &PlaylistModel::OnCurrentIndexChanged);
+		this, &PlaylistModel::_OnCurrentIndexChanged);
 }
 
 void PlaylistModel::Add(const AudioUrls& urls)
@@ -125,14 +125,9 @@ QStringList PlaylistModel::mimeTypes() const
 	return types;
 }
 
-void PlaylistModel::OnCurrentIndexChanged(int pos)
+void PlaylistModel::OnMediaIndexChanged(int newIndex)
 {
-	auto cnt = mData.mediaCount();
-
-	if (cnt > 0) {
-		Q_EMIT dataChanged(index(0, 0),
-			index(cnt - 1, 0), { Qt::DecorationRole });
-	}
+	mData.setCurrentIndex(newIndex);
 }
 
 void PlaylistModel::OnInsert(AudioUrls urls)
@@ -252,6 +247,16 @@ void PlaylistModel::_Clear()
 	changePersistentIndex(oldModelIndex, QModelIndex());
 
 	Q_EMIT layoutChanged();
+}
+
+void PlaylistModel::_OnCurrentIndexChanged(int newIndex)
+{
+	auto cnt = mData.mediaCount();
+
+	if (cnt > 0) {
+		Q_EMIT dataChanged(index(0, 0),
+			index(cnt - 1, 0), { Qt::DecorationRole });
+	}
 }
 
 } // namespace splay

@@ -32,8 +32,8 @@ public:
 	Playlist* PlaylistPtr() Q_DECL_NOEXCEPT;
 
 public Q_SLOTS:
-	//! Receives new media position from media playlist.
-	void OnCurrentIndexChanged(int pos);
+	//! Plays a media according to the new index.
+	void OnMediaIndexChanged(int newIndex);
 	//! TODO Inserts tracks into the end of model.
 	void OnInsert(AudioUrls urls);
 	//! TODO Executes internal moving of the rows.
@@ -66,6 +66,10 @@ protected:
 private:
 	//! Removes all the items from the playlist.
 	void _Clear();
+
+private Q_SLOTS:
+	//! Receives new media position from media playlist.
+	void _OnCurrentIndexChanged(int newIndex);
 
 private:
 	//! Container of the specified audio files.

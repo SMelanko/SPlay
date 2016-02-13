@@ -26,6 +26,8 @@ public:
 	Q_DISABLE_COPY(PlaylistView)
 
 Q_SIGNALS:
+	//! Emits new current index.
+	void MediaIndexChanged(int index);
 	//! Emits the signal for adding new tracks via drag and drop operation.
 	void Insert(AudioUrls urls);
 	//! Emits the signal when internal moving of the rows is executed.
@@ -45,7 +47,7 @@ protected:
 
 private Q_SLOTS:
 	//! Handles mouse double click on a table row.
-	void OnDoubleCkick(const QModelIndex& index);
+	void OnDoubleCkicked(const QModelIndex& index);
 	//! Handles a section (table header) clicking.
 	void OnSectionClicked(int index);
 	//! Handles a section (table header) resizing.

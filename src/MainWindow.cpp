@@ -180,9 +180,14 @@ void MainWindow::_CreateCentralWgt()
 
 	mPlayView = new PlaylistView{ this };
 	mPlayView->setModel(mPlayModel);
-	connect(mPlayView, &PlaylistView::Insert, mPlayModel, &PlaylistModel::OnInsert);
-	connect(mPlayView, &PlaylistView::Move, mPlayModel, &PlaylistModel::OnMove);
-	connect(mPlayView, &PlaylistView::Remove, mPlayModel, &PlaylistModel::OnRemove);
+	connect(mPlayView, &PlaylistView::MediaIndexChanged,
+		mPlayModel, &PlaylistModel::OnMediaIndexChanged);
+	connect(mPlayView, &PlaylistView::Insert,
+		mPlayModel, &PlaylistModel::OnInsert);
+	connect(mPlayView, &PlaylistView::Move,
+		mPlayModel,	&PlaylistModel::OnMove);
+	connect(mPlayView, &PlaylistView::Remove,
+		mPlayModel, &PlaylistModel::OnRemove);
 	mainLayout->addWidget(mPlayView);
 
 	centralWidget()->setLayout(mainLayout);
