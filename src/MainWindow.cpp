@@ -125,8 +125,8 @@ void MainWindow::_CreateCentralWgt()
 	QHBoxLayout* controlCenterLayout{ new QHBoxLayout };
 	mPrevBtn = new QPushButton{ this };
 	mPrevBtn->setFixedSize(36, 36);
-	mPrevBtn->setIcon(QIcon{ ":/btn_rewind" });
-	mPrevBtn->setIconSize(QSize{ 28, 28 });
+	mPrevBtn->setIcon(QIcon{ ":/btn_previous" });
+	mPrevBtn->setIconSize(QSize{ 24, 24 });
 	mPrevBtn->setToolTip(tr("Previous"));
 	connect(mPrevBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnPrevious);
 	controlCenterLayout->addWidget(mPrevBtn);
@@ -143,8 +143,8 @@ void MainWindow::_CreateCentralWgt()
 
 	mNextBtn = new QPushButton{ this };
 	mNextBtn->setFixedSize(36, 36);
-	mNextBtn->setIcon(QIcon{ ":/btn_forward" });
-	mNextBtn->setIconSize(QSize{ 28, 28 });
+	mNextBtn->setIcon(QIcon{ ":/btn_next" });
+	mNextBtn->setIconSize(QSize{ 24, 24 });
 	mNextBtn->setToolTip(tr("Next"));
 	connect(mNextBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnNext);
 	controlCenterLayout->addWidget(mNextBtn);

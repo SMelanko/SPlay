@@ -6,6 +6,8 @@
         <file alias="btn_rewind">Icons/btn_rewind.png</file>
         <file alias="btn_volume">Icons/btn_volume.png</file>
         <file alias="playing_icon">Icons/playing_icon.png</file>
+        <file alias="btn_previous">Icons/btn_previous.png</file>
+        <file alias="btn_next">Icons/btn_next.png</file>
     </qresource>
     <qresource prefix="/logo">
         <file>splay_16.png</file>
