@@ -3,6 +3,7 @@
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
 #include "Slider.h"
+#include "TableViewDelegate.h"
 #include "VolumeWidget.h"
 
 #include <QAction>
@@ -179,6 +180,10 @@ void MainWindow::_CreateCentralWgt()
 	mainLayout->addWidget(mPosSldr);
 
 	mPlayView = new PlaylistView{ this };
+	TableViewDelegate* twd = new TableViewDelegate { mPlayView };
+	connect(mPlayModel, &PlaylistModel::NewIndex,
+		twd, &TableViewDelegate::SetNewIndex);
+	mPlayView->setItemDelegate(twd);
 	mPlayView->setModel(mPlayModel);
 	connect(mPlayView, &PlaylistView::MediaIndexChanged,
 		mPlayModel, &PlaylistModel::OnMediaIndexChanged);

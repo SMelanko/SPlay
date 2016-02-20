@@ -31,6 +31,10 @@ public:
 	//! Returns playlist pointer.
 	Playlist* PlaylistPtr() Q_DECL_NOEXCEPT;
 
+Q_SIGNALS:
+	/// Emits new index.
+	void NewIndex(int val);
+
 public Q_SLOTS:
 	//! Plays a media according to the new index.
 	void OnMediaIndexChanged(int newIndex);
@@ -69,7 +73,7 @@ private:
 
 private Q_SLOTS:
 	//! Receives new media position from media playlist.
-	void _OnCurrentIndexChanged(int newIndex);
+	void _OnCurrentIndexChanged(int val);
 
 private:
 	//! Container of the specified audio files.

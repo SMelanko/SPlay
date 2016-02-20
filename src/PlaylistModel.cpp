@@ -76,10 +76,6 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 				}
 			}
 		}
-	} else if (role == Qt::DecorationRole) {
-		if (row == mData.currentIndex() && column == 0) {
-			return QPixmap{ ":/playing_icon" };
-		}
 	}
 
 	return QVariant();
@@ -141,26 +137,15 @@ void PlaylistModel::OnInsert(AudioUrls urls)
 
 void PlaylistModel::OnMove(RowList selectedRows, int dest)
 {
-	qDebug() << "PlaylistModel::OnMove: number = " << selectedRows.size() << " dest = " << dest;
+	Q_EMIT layoutAboutToBeChanged();
 
-	const QModelIndex parent = QModelIndex();
-	// Number of rows for the moving.
-	const auto num(static_cast<int>(selectedRows.size()));
+	auto oldModelIndex = index(selectedRows[0], -1);
 
-	auto res = beginMoveRows(parent, selectedRows[0], selectedRows[num - 1], parent, dest);
-
-	if (!res) {
-		qDebug() << "PlaylistModel::OnMove: Result is " << res;
-		return;
-	}
-
-	// Copy rows whose have been moved into the temporary vector.
-	Playlist tmp;
-	for (int i = 0; i < num; ++i) {
-		tmp.addMedia(mData.media(selectedRows[i]));
-	}
-	// Delete moved rows from current playlist.
+	QList<QMediaContent> tmp;
 	for (const auto& row : selectedRows) {
+		// Copy moving row into the temporary vector.
+		tmp.push_back(mData.media(row));
+		// Delete this row directly from the current playlist.
 		mData.removeMedia(row);
 	}
 
@@ -173,10 +158,14 @@ void PlaylistModel::OnMove(RowList selectedRows, int dest)
 	}
 
 	// Move selected rows to the destination.
-	//mData.insert(std::begin(mData) + dest + coef,
-	//	std::begin(tmp), std::end(tmp));
+	if (!mData.insertMedia(dest + coef, tmp)) {
+		qDebug() << "PlaylistModel::OnMove: Insert media failed.";
+		return;
+	}
 
-	endMoveRows();
+	changePersistentIndex(oldModelIndex, index(dest, -1));
+
+	Q_EMIT layoutChanged();
 }
 
 void PlaylistModel::OnNext()
@@ -191,15 +180,14 @@ void PlaylistModel::OnPrevious()
 
 void PlaylistModel::OnRemove(RowList selectedRows)
 {
-	int coef = 0;
+	Q_EMIT layoutAboutToBeChanged();
+
+	auto oldModelIndex = QModelIndex();
 
 	// coef var is used for the correction. We should update
 	// values in the list of selected rows after erasing,
 	// since size of list on every iteration decreasing.
-
-	Q_EMIT layoutAboutToBeChanged();
-
-	auto oldModelIndex = QModelIndex();
+	int coef = 0;
 
 	for (const auto& row : selectedRows) {
 		mData.removeMedia(row - coef);
@@ -249,11 +237,12 @@ void PlaylistModel::_Clear()
 	Q_EMIT layoutChanged();
 }
 
-void PlaylistModel::_OnCurrentIndexChanged(int newIndex)
+void PlaylistModel::_OnCurrentIndexChanged(int val)
 {
 	auto cnt = mData.mediaCount();
 
 	if (cnt > 0) {
+		Q_EMIT NewIndex(val);
 		Q_EMIT dataChanged(index(0, 0),
 			index(cnt - 1, 0), { Qt::DecorationRole });
 	}

@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(STest)
+project(SPlay)
 
 if(CMAKE_BUILD_TYPE STREQUAL "")
-	set(CMAKE_BUILD_TYPE Debug CACHE STRING
-		"None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+	set(CMAKE_BUILD_TYPE Debug)
 endif()
+
+message(STATUS "Generate ${CMAKE_BUILD_TYPE} version")
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -pthread")
@@ -22,7 +23,7 @@ else()
 endif()
 
 #
-# FInd Qt5 framework.
+# Find Qt5 framework.
 #
 find_package(Qt5Widgets)
 find_package(Qt5Multimedia)
@@ -78,6 +79,7 @@ set(INCLUDE_LIST
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/Slider.h
+	include/TableViewDelegate.h
 	include/Types.h
 	include/Utils.h
 	include/VolumeWidget.h)
@@ -90,6 +92,7 @@ set(SRC_LIST
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
 	src/Slider.cpp
+	src/TableViewDelegate.cpp
 	src/Utils.cpp
 	src/VolumeWidget.cpp)
 
@@ -98,6 +101,7 @@ qt5_wrap_cpp(MOC_SRC_LIST
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
+	include/TableViewDelegate.h
 	include/VolumeWidget.h)
 
 qt5_add_resources(RES_LIST
