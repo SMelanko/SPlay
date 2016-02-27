@@ -117,7 +117,7 @@ void MainWindow::_CreateCentralWgt()
 	QBoxLayout* controlLayout{ new QHBoxLayout };
 
 	QHBoxLayout* controlLeftLayout{ new QHBoxLayout };
-	QLabel* tmp{ new QLabel{ this } }; // TODO
+	QLabel* tmp{ new QLabel{ this } }; // TODO Invisible label.
 	controlLeftLayout->addWidget(tmp);
 	controlLeftLayout->addStretch();
 
@@ -128,6 +128,14 @@ void MainWindow::_CreateCentralWgt()
 	mPrevBtn->setFixedSize(36, 36);
 	mPrevBtn->setIcon(QIcon{ ":/btn_previous" });
 	mPrevBtn->setIconSize(QSize{ 24, 24 });
+	mPrevBtn->setStyleSheet("QPushButton { border: none; }"
+		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
+			"radius: 0.6, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
+			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
+			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
+			"stop:0.8 #F0F0F0, stop:1 transparent);"
+		"}");
 	mPrevBtn->setToolTip(tr("Previous"));
 	connect(mPrevBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnPrevious);
 	controlCenterLayout->addWidget(mPrevBtn);
@@ -137,6 +145,14 @@ void MainWindow::_CreateCentralWgt()
 	mPlayBtn->setFixedSize(50, 50);
 	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
+	mPlayBtn->setStyleSheet("QPushButton { border: none; }"
+		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
+			"radius: 0.6, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
+			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
+			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
+			"stop:0.8 #F0F0F0, stop:1 transparent);"
+		"}");
 	mPlayBtn->setToolTip(tr("Play"));
 	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
 	controlCenterLayout->addWidget(mPlayBtn);
@@ -146,6 +162,14 @@ void MainWindow::_CreateCentralWgt()
 	mNextBtn->setFixedSize(36, 36);
 	mNextBtn->setIcon(QIcon{ ":/btn_next" });
 	mNextBtn->setIconSize(QSize{ 24, 24 });
+	mNextBtn->setStyleSheet("QPushButton { border: none; }"
+		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
+			"radius: 0.6, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
+			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
+			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
+			"stop:0.8 #F0F0F0, stop:1 transparent);"
+		"}");
 	mNextBtn->setToolTip(tr("Next"));
 	connect(mNextBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnNext);
 	controlCenterLayout->addWidget(mNextBtn);
