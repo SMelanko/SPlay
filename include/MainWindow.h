@@ -58,7 +58,7 @@ private Q_SLOTS:
 	//! Updates the slider duration according with current audio.
 	void _OnUpdateDuration(qint64 duration);
 	//! Updates the playback position of the current audio.
-	void _OnUpdatePosition(qint64 pos);
+	void _OnUpdatePosition(qint64 val);
 
 private:
 	//! Play/pause button.

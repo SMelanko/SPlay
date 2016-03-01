@@ -4,6 +4,7 @@
 #include "PlaylistView.h"
 #include "Slider.h"
 #include "TableViewDelegate.h"
+#include "Utils.h"
 #include "VolumeWidget.h"
 
 #include <QAction>
@@ -274,21 +275,10 @@ void MainWindow::_OnUpdateDuration(qint64 duration)
 	mPosSldr->setPageStep(duration / 10);
 }
 
-void MainWindow::_OnUpdatePosition(qint64 pos)
+void MainWindow::_OnUpdatePosition(qint64 val)
 {
-	mPosSldr->setValue(pos);
-
-	Q_DECL_CONSTEXPR int coef = 60000;
-	int minutes = static_cast<int>(pos / coef);
-	int seconds = qRound((pos % coef) / 1000.0);
-
-	if (seconds == 60) {
-		++minutes;
-		seconds = 0;
-	}
-
-	QTime time{ 0, minutes, seconds };
-	mTimeLbl->setText(time.toString(tr("mm:ss")));
+	mPosSldr->setValue(val);
+	mTimeLbl->setText(utils::MillisecondsToHhMmSs(val));
 }
 
 } // namespace splay

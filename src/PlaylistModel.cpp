@@ -72,7 +72,8 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 			}
 			case 3: {
 				if (!f.isNull() && f.audioProperties()) {
-					return QVariant(f.audioProperties()->length());
+					return QVariant(utils::SecondsToHhMmSs(
+						f.audioProperties()->length()));
 				}
 			}
 		}

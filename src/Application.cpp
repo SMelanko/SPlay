@@ -3,6 +3,7 @@
 #include "MainWindow.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 namespace splay
 {
@@ -40,8 +41,8 @@ bool Application::notify(QObject* receiver, QEvent* event)
 		msg = _ErrMsg("<Unknown>", receiver, event);
 	}
 
-	qFatal(msg.toStdString().c_str());
 	SPLAY_LOG_ERROR(msg.toStdString().c_str());
+	QMessageBox::critical(Q_NULLPTR, tr("SPlay"), msg);
 
 	return false;
 }
@@ -49,7 +50,7 @@ bool Application::notify(QObject* receiver, QEvent* event)
 QString Application::_ErrMsg(const char* msg,
 	const QObject* receiver, const QEvent* event) const
 {
-	return QString{ "Error: %1. Sending event %2 to object %3 (%4)" }
+	return QString::fromLatin1("Error: %1. Sending event %2 to object %3 (%4)")
 		.arg(msg)
 		.arg(typeid(*event).name())
 		.arg(qPrintable(receiver->objectName()))
