@@ -1,4 +1,4 @@
-#include "TableViewDelegate.h"
+#include "PlaylistViewDelegate.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -6,12 +6,12 @@
 namespace splay
 {
 
-TableViewDelegate::TableViewDelegate(QObject* parent)
+PlaylistViewDelegate::PlaylistViewDelegate(QObject* parent)
 	: QStyledItemDelegate{ parent }
 {
 }
 
-void TableViewDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
+void PlaylistViewDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 	const QModelIndex& index) const
 {
 	if (index.row() == mIndex && index.column() == 0) {
@@ -31,7 +31,7 @@ void TableViewDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 	}
 }
 
-void TableViewDelegate::SetNewIndex(int val)
+void PlaylistViewDelegate::SetNewIndex(int val)
 {
 	qDebug() << "TableViewDelegate::SetNewIndex: Index has been changed " << val;
 	mIndex = val;

@@ -78,8 +78,8 @@ set(INCLUDE_LIST
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
+	include/PlaylistViewDelegate.h
 	include/Slider.h
-	include/TableViewDelegate.h
 	include/Types.h
 	include/Utils.h
 	include/VolumeWidget.h)
@@ -91,8 +91,8 @@ set(SRC_LIST
 	src/MainWindow.cpp
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
+	src/PlaylistViewDelegate.cpp
 	src/Slider.cpp
-	src/TableViewDelegate.cpp
 	src/Utils.cpp
 	src/VolumeWidget.cpp)
 
@@ -101,7 +101,7 @@ qt5_wrap_cpp(MOC_SRC_LIST
 	include/MainWindow.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
-	include/TableViewDelegate.h
+	include/PlaylistViewDelegate.h
 	include/VolumeWidget.h)
 
 qt5_add_resources(RES_LIST

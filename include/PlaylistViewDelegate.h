@@ -10,18 +10,18 @@
 namespace splay
 {
 
-class TableViewDelegate : public QStyledItemDelegate
+class PlaylistViewDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 
 public:
 	/// Constructor.
-	explicit TableViewDelegate(QObject* parent = Q_NULLPTR);
+	explicit PlaylistViewDelegate(QObject* parent = Q_NULLPTR);
 	/// Destructor.
-	~TableViewDelegate() = default;
+	~PlaylistViewDelegate() = default;
 
 	//! Disable copy constructor and copy assign operator.
-	Q_DISABLE_COPY(TableViewDelegate)
+	Q_DISABLE_COPY(PlaylistViewDelegate)
 
 public:
 	/// Renders the delegate using the given painter and style option

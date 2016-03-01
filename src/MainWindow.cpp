@@ -3,7 +3,7 @@
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
 #include "Slider.h"
-#include "TableViewDelegate.h"
+#include "PlaylistViewDelegate.h"
 #include "Utils.h"
 #include "VolumeWidget.h"
 
@@ -131,11 +131,8 @@ void MainWindow::_CreateCentralWgt()
 	mPrevBtn->setIconSize(QSize{ 24, 24 });
 	mPrevBtn->setStyleSheet("QPushButton { border: none; }"
 		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.6, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
-			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
-			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
-			"stop:0.8 #F0F0F0, stop:1 transparent);"
+			"radius: 0.55, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
 		"}");
 	mPrevBtn->setToolTip(tr("Previous"));
 	connect(mPrevBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnPrevious);
@@ -148,11 +145,8 @@ void MainWindow::_CreateCentralWgt()
 	mPlayBtn->setIconSize(QSize{ 40, 40 });
 	mPlayBtn->setStyleSheet("QPushButton { border: none; }"
 		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.6, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
-			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
-			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
-			"stop:0.8 #F0F0F0, stop:1 transparent);"
+			"radius: 0.55, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
 		"}");
 	mPlayBtn->setToolTip(tr("Play"));
 	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
@@ -165,11 +159,8 @@ void MainWindow::_CreateCentralWgt()
 	mNextBtn->setIconSize(QSize{ 24, 24 });
 	mNextBtn->setStyleSheet("QPushButton { border: none; }"
 		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.6, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:0.2 #CDCDCD,"
-			"stop:0.2 #CDCDCD, stop:0.4 #D3D3D3,"
-			"stop:0.4 #D3D3D3, stop:0.8 #F0F0F0,"
-			"stop:0.8 #F0F0F0, stop:1 transparent);"
+			"radius: 0.55, fx:0.5, fy:0.5,"
+			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
 		"}");
 	mNextBtn->setToolTip(tr("Next"));
 	connect(mNextBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnNext);
@@ -205,9 +196,9 @@ void MainWindow::_CreateCentralWgt()
 	mainLayout->addWidget(mPosSldr);
 
 	mPlayView = new PlaylistView{ this };
-	TableViewDelegate* twd = new TableViewDelegate { mPlayView };
+	PlaylistViewDelegate* twd = new PlaylistViewDelegate { mPlayView };
 	connect(mPlayModel, &PlaylistModel::NewIndex,
-		twd, &TableViewDelegate::SetNewIndex);
+		twd, &PlaylistViewDelegate::SetNewIndex);
 	mPlayView->setItemDelegate(twd);
 	mPlayView->setModel(mPlayModel);
 	connect(mPlayView, &PlaylistView::MediaIndexChanged,
