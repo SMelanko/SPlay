@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "Logger.h"
+#include "PlaybackControlButton.h"
 #include "PlaylistModel.h"
 #include "PlaylistView.h"
 #include "Slider.h"
@@ -27,7 +28,7 @@ namespace splay
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow { parent }
 {
-	resize(640, 480);
+	resize(640, 480); // TODO Should be depends on screen resolution.
 	setWindowTitle("SPlay");
 
 	mPlayModel = new PlaylistModel{};
@@ -57,13 +58,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnSeekForward()
 {
-	qDebug() << "triggerAction(QSlider::SliderPageStepAdd);";
+	qDebug() << "MainWindow::OnSeekForward";
 	mPosSldr->triggerAction(QSlider::SliderPageStepAdd);
 }
 
 void MainWindow::OnSeekBackward()
 {
-	qDebug() << "triggerAction(QSlider::SliderPageStepSub);";
+	qDebug() << "MainWindow::OnSeekBackward";
 	mPosSldr->triggerAction(QSlider::SliderPageStepSub);
 }
 
@@ -71,12 +72,10 @@ void MainWindow::OnTogglePlayback()
 {
 	if (mPlayer.mediaStatus() == QMediaPlayer::NoMedia) {
 		return;
-	}
-	else if (mPlayer.state() == QMediaPlayer::PlayingState) {
+	} else if (mPlayer.state() == QMediaPlayer::PlayingState) {
 		mPlayer.pause();
 		mPlayBtn->setIcon(QIcon{ ":/btn_play" });
-	}
-	else {
+	} else {
 		mPlayer.play();
 		mPlayBtn->setIcon(QIcon{ ":/btn_pause" });
 	}
@@ -125,45 +124,24 @@ void MainWindow::_CreateCentralWgt()
 	controlLayout->addLayout(controlLeftLayout);
 
 	QHBoxLayout* controlCenterLayout{ new QHBoxLayout };
-	mPrevBtn = new QPushButton{ this };
-	mPrevBtn->setFixedSize(36, 36);
-	mPrevBtn->setIcon(QIcon{ ":/btn_previous" });
-	mPrevBtn->setIconSize(QSize{ 24, 24 });
-	mPrevBtn->setStyleSheet("QPushButton { border: none; }"
-		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.55, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
-		"}");
-	mPrevBtn->setToolTip(tr("Previous"));
-	connect(mPrevBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnPrevious);
+	mPrevBtn = new PlaybackControlButton{ this, QSize{ 36, 36 },
+		QIcon{ ":/btn_previous" }, QSize{ 24, 24 }, tr("Previous") };
+	connect(mPrevBtn, &QPushButton::clicked,
+		mPlayModel, &PlaylistModel::OnPrevious);
 	controlCenterLayout->addWidget(mPrevBtn);
 	controlCenterLayout->addSpacing(15);
 
-	mPlayBtn = new QPushButton{ this };
-	mPlayBtn->setFixedSize(50, 50);
-	mPlayBtn->setIcon(QIcon{ ":/btn_play" });
-	mPlayBtn->setIconSize(QSize{ 40, 40 });
-	mPlayBtn->setStyleSheet("QPushButton { border: none; }"
-		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.55, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
-		"}");
-	mPlayBtn->setToolTip(tr("Play"));
-	connect(mPlayBtn, &QPushButton::clicked, this, &MainWindow::OnTogglePlayback);
+	mPlayBtn = new PlaybackControlButton{ this, QSize{ 50, 50 },
+		QIcon{ ":/btn_play" }, QSize{ 40, 40 }, tr("Play") };
+	connect(mPlayBtn, &QPushButton::clicked,
+		this, &MainWindow::OnTogglePlayback);
 	controlCenterLayout->addWidget(mPlayBtn);
 	controlCenterLayout->addSpacing(15);
 
-	mNextBtn = new QPushButton{ this };
-	mNextBtn->setFixedSize(36, 36);
-	mNextBtn->setIcon(QIcon{ ":/btn_next" });
-	mNextBtn->setIconSize(QSize{ 24, 24 });
-	mNextBtn->setStyleSheet("QPushButton { border: none; }"
-		"QPushButton:hover { background: qradialgradient(cx:0.5, cy:0.5,"
-			"radius: 0.55, fx:0.5, fy:0.5,"
-			"stop:0.0 #BEBEBE, stop:1.0 transparent);"
-		"}");
-	mNextBtn->setToolTip(tr("Next"));
-	connect(mNextBtn, &QPushButton::clicked, mPlayModel, &PlaylistModel::OnNext);
+	mNextBtn = new PlaybackControlButton{ this, QSize{ 36, 36 },
+		QIcon{ ":/btn_next" }, QSize{ 24, 24 }, tr("Next") };
+	connect(mNextBtn, &QPushButton::clicked,
+		mPlayModel, &PlaylistModel::OnNext);
 	controlCenterLayout->addWidget(mNextBtn);
 
 	controlLayout->addLayout(controlCenterLayout);
@@ -174,7 +152,8 @@ void MainWindow::_CreateCentralWgt()
 	mVolBtn->setMinimumWidth(150);
 	mVolBtn->setToolTip(tr("Adjust volume"));
 	mVolBtn->SetVolume(mPlayer.volume());
-	connect(mVolBtn, &VolumeWidget::VolumeChanged, &mPlayer, &QMediaPlayer::setVolume);
+	connect(mVolBtn, &VolumeWidget::VolumeChanged,
+		&mPlayer, &QMediaPlayer::setVolume);
 	controlRightLayout->addWidget(mVolBtn);
 
 	controlLayout->addLayout(controlRightLayout);
@@ -196,10 +175,10 @@ void MainWindow::_CreateCentralWgt()
 	mainLayout->addWidget(mPosSldr);
 
 	mPlayView = new PlaylistView{ this };
-	PlaylistViewDelegate* twd = new PlaylistViewDelegate { mPlayView };
+	PlaylistViewDelegate* delegate = new PlaylistViewDelegate{ mPlayView };
 	connect(mPlayModel, &PlaylistModel::NewIndex,
-		twd, &PlaylistViewDelegate::SetNewIndex);
-	mPlayView->setItemDelegate(twd);
+		delegate, &PlaylistViewDelegate::SetNewIndex);
+	mPlayView->setItemDelegate(delegate);
 	mPlayView->setModel(mPlayModel);
 	connect(mPlayView, &PlaylistView::MediaIndexChanged,
 		mPlayModel, &PlaylistModel::OnMediaIndexChanged);
@@ -231,6 +210,7 @@ void MainWindow::_CreateMenu()
 
 void MainWindow::_OnHandleError() Q_DECL_NOEXCEPT
 {
+	qDebug() << "MainWindow::_OnHandleError";
 	const auto errStr = mPlayer.errorString();
 	SPLAY_LOG_CRITICAL(errStr.toStdString().c_str());
 	QMessageBox::critical(this, tr("SPlay error"), errStr);
@@ -243,8 +223,8 @@ void MainWindow::_OnOpenFiles()
 	const auto dir = audioPaths.isEmpty() ?
 		QDir::homePath() : audioPaths.first();
 
-	const auto urls = QFileDialog::getOpenFileUrls(this,
-		tr("Open file"), QUrl::fromLocalFile(dir), tr("MP3 files (*.mp3);;All files (*.*)"));
+	const auto urls = QFileDialog::getOpenFileUrls(this, tr("Open files"),
+		QUrl::fromLocalFile(dir), tr("MP3 files (*.mp3);;All files (*.*)"));
 
 	if (!urls.isEmpty()) {
 		mPlayModel->Open(urls);

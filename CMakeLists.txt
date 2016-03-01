@@ -76,6 +76,7 @@ set(INCLUDE_LIST
 	include/Application.h
 	include/Logger.h
 	include/MainWindow.h
+	include/PlaybackControlButton.h
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/PlaylistViewDelegate.h
