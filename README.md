@@ -12,4 +12,4 @@
 
 ## The latest snapshot
 
-<p align="center"><img src="https://raw.github.com/SMelanko/STest/master/snap/2016_02_16.png"/></p>
+<p align="center"><img src="https://raw.github.com/SMelanko/STest/master/snap/2016_03_08.png"/></p>
