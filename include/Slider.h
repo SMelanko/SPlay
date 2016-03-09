@@ -11,15 +11,15 @@ namespace splay
 class Slider : public QSlider
 {
 public:
-	//! Constructor.
+	/// Constructor.
 	explicit Slider(Qt::Orientation orient, QWidget* parent = Q_NULLPTR);
 
 protected:
-	//! Receives and handles mouse press events.
+	/// Receives and handles mouse press events.
 	void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 
 private:
-	//! Makes a new custom style sheet.
+	/// Makes a new custom style sheet.
 	QString _Qss() const;
 };
 

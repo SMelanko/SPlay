@@ -1,6 +1,5 @@
 #include "Slider.h"
 
-#include <QDebug>
 #include <QMouseEvent>
 
 namespace splay
@@ -10,7 +9,7 @@ Slider::Slider(Qt::Orientation orient, QWidget* parent)
 	: QSlider{ orient, parent }
 {
 	setCursor(Qt::PointingHandCursor);
-	setFixedHeight(10); // For Windows.
+	setFixedHeight(10);
 	setToolTip(tr("Seek"));
 	setStyleSheet(_Qss());
 }
@@ -23,8 +22,7 @@ void Slider::mousePressEvent(QMouseEvent* event)
 		setValue(val);
 
 		event->accept();
-	}
-	else {
+	} else {
 		QSlider::mousePressEvent(event);
 	}
 }
@@ -56,4 +54,4 @@ QString Slider::_Qss() const
 		}"};
 }
 
-}
+} // namespace splay
