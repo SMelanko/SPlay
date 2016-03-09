@@ -32,28 +32,27 @@ void Slider::mousePressEvent(QMouseEvent* event)
 QString Slider::_Qss() const
 {
 	return QString{
-		"QSlider::groove:horizontal { \
-			border: 1px solid #bbb; \
-			background: #e3e3e3; \
-			height: 5px; \
-			border-radius: 2px; \
+		"QSlider::groove { \
+			background: #e9e9e9; \
+			border: 1px solid #d0d0d0; \
+			border-radius: 3px; \
+			height: 6px; \
 		} \
-		QSlider::sub-page:horizontal { \
-			background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1, \
-				stop: 0 #9abee3, stop: 1 #356ccc); \
-			border-top: 1px solid #bbb; \
-			border-bottom: 1px solid #bbb; \
-			border-left: 1px solid #bbb; \
-			border-top-left-radius: 2px; \
-			border-bottom-left-radius: 2px; \
+		QSlider::sub-page { \
+			background: #c77e35; \
+			border-top: 1px solid #d0d0d0; \
+			border-bottom: 1px solid #d0d0d0; \
+			border-left: 1px solid #d0d0d0; \
+			border-top-left-radius: 3px; \
+			border-bottom-left-radius: 3px; \
 		} \
-		QSlider::add-page:horizontal { \
+		QSlider::add-page { \
 			background: #fff; \
-			border-top: 1px solid #bbb; \
-			border-bottom: 1px solid #bbb; \
-			border-right: 1px solid #bbb; \
-			border-top-right-radius: 2px; \
-			border-bottom-right-radius: 2px; \
+			border-top: 1px solid #d0d0d0; \
+			border-bottom: 1px solid #d0d0d0; \
+			border-right: 1px solid #d0d0d0; \
+			border-top-right-radius: 3px; \
+			border-bottom-right-radius: 3px; \
 		}"};
 }
 
