@@ -1,4 +1,4 @@
-colors:
-	- #357ec7
-	- #35c77e
-
+Colors:
+	- #357ec7 (blue);
+	- #35c77e (green);
+	- #c77e35 (brown).
