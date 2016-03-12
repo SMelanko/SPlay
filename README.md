@@ -1,6 +1,6 @@
 # SPlay
 
-<img src="https://raw.github.com/SMelanko/STest/master/res/Icons/btn_play.png" align="right"/><p>My SPlay test project.</p>
+<img src="https://raw.github.com/SMelanko/STest/master/res/icons/btn_play.png" align="right"/><p>My SPlay test project.</p>
 
 
 ## Additional libraries
