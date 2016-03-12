@@ -20,7 +20,7 @@ protected:
 
 private:
 	/// Makes a new custom style sheet.
-	QString _Qss() const;
+	QString _Qss() const Q_DECL_NOEXCEPT;
 };
 
 } // namespace splay

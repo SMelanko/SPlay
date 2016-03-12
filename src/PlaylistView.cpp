@@ -9,43 +9,28 @@ namespace splay
 {
 
 PlaylistView::PlaylistView(QWidget* parent)
-	: QTableView(parent)
-	, mSectionResized(false)
+	: QTableView{ parent }
+	, mSectionResized{ false }
 {
-	// Set the size policy of the widget to horizontal and vertical.
-	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	// Set additional parameters to the horizontal header.
-	auto hh = horizontalHeader();
-	hh->setHighlightSections(false);
-	hh->setSectionsMovable(true);
-	hh->setVisible(true);
-	setHorizontalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
-	// Set additional parameters to the vertical header.
-	auto vh = verticalHeader();
-	vh->setVisible(false);
-	vh->setDefaultSectionSize(23);
-	setVerticalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
-	// Set custom widget style sheet.
-	setStyleSheet(_Qss());
-	// Disable possibility for editing rows.
-	setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
+	_SetUpHorizontalHeader();
+	_SetUpVerticalHeader();
+	_SetUpDragAndDrop();
+
 	// Alternate background color in the table.
 	setAlternatingRowColors(true);
+	// Disable possibility for editing rows.
+	setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 	// Enable rows selection.
 	setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 	// User can select a one or more rows in the play list.
 	setSelectionMode(QAbstractItemView::SelectionMode::ExtendedSelection);
+	// Set the size policy of the widget to horizontal and vertical.
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	// Set custom widget style sheet.
+	setStyleSheet(_Qss());
 
-	//
-	// TODO Drag and drop.
-	//
-	// Enable drop events in the current widget area.
-	setDragEnabled(true);
-	setAcceptDrops(true);
-	setDragDropMode(QTableView::InternalMove);
-	setDropIndicatorShown(true);
-
-	connect(this, &QTableView::doubleClicked, this, &PlaylistView::OnDoubleCkicked);
+	connect(this, &QTableView::doubleClicked,
+		this, &PlaylistView::OnDoubleCkicked);
 	connect(horizontalHeader(), &QHeaderView::sectionClicked,
 		this, &PlaylistView::OnSectionClicked);
 	connect(horizontalHeader(), &QHeaderView::sectionResized,
@@ -138,8 +123,8 @@ void PlaylistView::OnSectionResized(int logicalIndex, int oldSize, int newSize)
 
 RowList PlaylistView::_GetSelectedRows() const Q_DECL_NOEXCEPT
 {
-	RowList selectedRows;
 	const auto indexes = selectionModel()->selectedRows();
+	RowList selectedRows(indexes.size());
 
 	for (const auto& index : indexes) {
 		selectedRows.push_back(index.row());
@@ -149,12 +134,38 @@ RowList PlaylistView::_GetSelectedRows() const Q_DECL_NOEXCEPT
 		std::sort(selectedRows.begin(), selectedRows.end());
 	}
 
-	return std::move(selectedRows);
+	return selectedRows;
+}
+
+void PlaylistView::_SetUpHorizontalHeader() Q_DECL_NOEXCEPT
+{
+	auto hh = horizontalHeader();
+	hh->setHighlightSections(false);
+	hh->setSectionsMovable(true);
+	hh->setVisible(true);
+	setHorizontalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
+}
+
+void PlaylistView::_SetUpDragAndDrop() Q_DECL_NOEXCEPT
+{
+	// Enable drop events in the current widget area.
+	setDragEnabled(true);
+	setAcceptDrops(true);
+	setDragDropMode(QTableView::InternalMove);
+	setDropIndicatorShown(true);
+}
+
+void PlaylistView::_SetUpVerticalHeader() Q_DECL_NOEXCEPT
+{
+	auto vh = verticalHeader();
+	vh->setDefaultSectionSize(23);
+	vh->setVisible(false);
+	setVerticalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
 }
 
 QString PlaylistView::_Qss() const Q_DECL_NOEXCEPT
 {
-	return QString(
+	return QStringLiteral(
 		"QHeaderView {"
 			"background-color: #357ec7;"
 			"font-size: 14px;"
@@ -167,13 +178,10 @@ QString PlaylistView::_Qss() const Q_DECL_NOEXCEPT
 				"stop: 0.6 #4387ff, stop: 1 #357ec7);"
 		"}"
 		"QTableView {"
-			"border: 2px solid #357ec7;"
+			"border: 1px solid #357ec7;"
 			"border-radius: 2px;"
-			"gridline-color: #d8d8d8;"
-			"selection-color: #000;"
-			"selection-background-color: #ccdfff;"
+			"gridline-color: #d0d0d0;"
 			"font-size: 12px;"
-			"padding-top: 0px;"
 		"}"
 		"QScrollBar {"
 			"background: #e9e9e9;"

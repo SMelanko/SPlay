@@ -1,13 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="btn_forward">Icons/btn_forward.png</file>
-        <file alias="btn_pause">Icons/btn_pause.png</file>
-        <file alias="btn_play">Icons/btn_play.png</file>
-        <file alias="btn_rewind">Icons/btn_rewind.png</file>
-        <file alias="btn_volume">Icons/btn_volume.png</file>
-        <file alias="playing_icon">Icons/playing_icon.png</file>
-        <file alias="btn_previous">Icons/btn_previous.png</file>
-        <file alias="btn_next">Icons/btn_next.png</file>
+        <file alias="btn_forward">icons/btn_forward.png</file>
+        <file alias="btn_pause">icons/btn_pause.png</file>
+        <file alias="btn_play">icons/btn_play.png</file>
+        <file alias="btn_rewind">icons/btn_rewind.png</file>
+        <file alias="btn_volume">icons/btn_volume.png</file>
+        <file alias="playing_icon">icons/playing_icon.png</file>
+        <file alias="btn_previous">icons/btn_previous.png</file>
+        <file alias="btn_next">icons/btn_next.png</file>
     </qresource>
     <qresource prefix="/logo">
         <file>splay_16.png</file>

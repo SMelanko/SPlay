@@ -20,7 +20,7 @@ public:
 	/// Destructor.
 	~PlaylistViewDelegate() = default;
 
-	//! Disable copy constructor and copy assign operator.
+	//! Disabled copy constructor and copy assign operator.
 	Q_DISABLE_COPY(PlaylistViewDelegate)
 
 public:
@@ -31,7 +31,7 @@ public:
 
 public Q_SLOTS:
 	/// Updates current media index.
-	void SetNewIndex(int val);
+	void OnSetNewIndex(int val);
 
 private:
 	/// Current index of the track which is being played.

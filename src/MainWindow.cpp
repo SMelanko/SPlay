@@ -177,7 +177,7 @@ void MainWindow::_CreateCentralWgt()
 	mPlayView = new PlaylistView{ this };
 	PlaylistViewDelegate* delegate = new PlaylistViewDelegate{ mPlayView };
 	connect(mPlayModel, &PlaylistModel::NewIndex,
-		delegate, &PlaylistViewDelegate::SetNewIndex);
+		delegate, &PlaylistViewDelegate::OnSetNewIndex);
 	mPlayView->setItemDelegate(delegate);
 	mPlayView->setModel(mPlayModel);
 	connect(mPlayView, &PlaylistView::MediaIndexChanged,

@@ -10,57 +10,63 @@
 namespace splay
 {
 
-class Track;
-
 class PlaylistView : public QTableView
 {
 	Q_OBJECT
 
 public:
-	//! Constructor.
+	/// Constructor.
 	explicit PlaylistView(QWidget* parent = Q_NULLPTR);
-	//! Destructor.
+	/// Destructor.
 	virtual ~PlaylistView() = default;
 
-	//! Disable copy constructor and copy assign operator.
+	/// Disabled copy constructor and copy assign operator.
 	Q_DISABLE_COPY(PlaylistView)
 
 Q_SIGNALS:
-	//! Emits new current index.
+	/// Emits new current index.
 	void MediaIndexChanged(int index);
-	//! Emits the signal for adding new tracks via drag and drop operation.
+	/// Emits new media list which have been added via drag and drop operation.
 	void Insert(AudioUrls urls);
-	//! Emits the signal when internal moving of the rows is executed.
+	/// TODO Emits the signal when internal moving of the rows is executed.
 	void Move(const RowList selectedRows, int dest);
-	//! Emits the signal for removing the rows.
+	/// Emits a list with rows for removing.
 	void Remove(const RowList selectedRows);
 
 protected:
-	//! Handles event that is sent to the current widget when a drag action enters it.
+	/// Handles event that is sent to the current widget when a drag action
+	/// enters it.
 	void dragEnterEvent(QDragEnterEvent* event) Q_DECL_OVERRIDE;
-	//! Handles event that is sent to the current widget when a drag action leaves it.
+	/// Handles event that is sent to the current widget when a drag action
+	/// leaves it.
 	void dragLeaveEvent(QDragLeaveEvent* event) Q_DECL_OVERRIDE;
-	//! Handles event when a drag and drop action is completed.
+	/// Handles event when a drag and drop action is completed.
 	void dropEvent(QDropEvent* event) Q_DECL_OVERRIDE;
-	//! Receives key press events for the widget.
+	/// Receives key press events for the widget.
 	void keyPressEvent(QKeyEvent* event) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-	//! Handles mouse double click on a table row.
+	/// Handles mouse double click on a table row.
 	void OnDoubleCkicked(const QModelIndex& index);
-	//! Handles a section (table header) clicking.
+	/// Handles a section (table header) clicking.
 	void OnSectionClicked(int index);
-	//! Handles a section (table header) resizing.
+	/// Handles a section (table header) resizing.
 	void OnSectionResized(int logicalIndex, int oldSize, int newSize);
 
 private:
-	//! Returns a list of rows whose have been selected.
+	/// Returns a list of the rows which have been selected.
 	RowList _GetSelectedRows() const Q_DECL_NOEXCEPT;
-	//! Creates custom style sheet for the widget.
+	/// Sets up drag and drop behaviour.
+	void _SetUpDragAndDrop() Q_DECL_NOEXCEPT;
+	/// Sets up the horizontal header.
+	void _SetUpHorizontalHeader() Q_DECL_NOEXCEPT;
+	/// Sets up the vertical header.
+	void _SetUpVerticalHeader() Q_DECL_NOEXCEPT;
+	/// Creates custom style sheet for the widget.
 	QString _Qss() const Q_DECL_NOEXCEPT;
 
 private:
-	//! Checks if table header section has been resized.
+	/// Checks if table header section has been resized.
 	bool mSectionResized;
 };
 
