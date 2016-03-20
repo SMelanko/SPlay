@@ -18,7 +18,7 @@ public:
 	//! Constructor.
 	explicit Application(int& argc, char** argv);
 	//! Destructor.
-	virtual ~Application() Q_DECL_NOEXCEPT;
+	virtual ~Application();
 
 	//! Disable copy constructor and copy assign operator.
 	Q_DISABLE_COPY(Application)

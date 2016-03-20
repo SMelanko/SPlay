@@ -1,26 +1,31 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required (VERSION 2.8)
 
-project(SPlay)
-
-if(CMAKE_BUILD_TYPE STREQUAL "")
-	set(CMAKE_BUILD_TYPE Debug)
-endif()
-
-message(STATUS "Generate ${CMAKE_BUILD_TYPE} version")
-
-if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -pthread")
-endif()
+project (SPlay)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-if(MSVC)
-	add_definitions(/W3)
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-	add_definitions(-Wall -pedantic)
-else()
-	message("Unknown compiler")
-endif()
+if (NOT CMAKE_BUILD_TYPE)
+	set (CMAKE_BUILD_TYPE Debug)
+endif ()
+
+message (STATUS "Generate ${CMAKE_BUILD_TYPE} version")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+	"${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+	# Using Clang.
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -stdlib=libc++")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	# Using GCC.
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -pthread")
+	add_definitions (-Wall -pedantic)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+	# Using Intel C++.
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	# Using Visual Studio C++.
+	add_definitions (/W3)
+else ()
+	message (FATAL_ERROR "Unknown compiler")
+endif ()
 
 #
 # Find Qt5 framework.
@@ -56,23 +61,15 @@ endif()
 #
 # Find TagLib library.
 #
-find_package(Taglib)
-
-if (taglib_found)
-	add_definitions(-DTAGLIB_STATIC)
-	if(UNIX)
-		set(TagSrcFile "${taglib_root}/taglib/mpeg/id3v2/id3v2frame.cpp")
-	endif()
-else ()
-	message(FATAL_ERROR "The taglib library was not found")
-endif ()
+find_package (Taglib)
+add_definitions (-DTAGLIB_STATIC)
 
 #
 # Third party include derictories.
 #
-set(external_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set (EXTERNAL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/external")
 
-set(INCLUDE_LIST
+set (INCLUDE_LIST
 	include/Application.h
 	include/Logger.h
 	include/MainWindow.h
@@ -85,7 +82,7 @@ set(INCLUDE_LIST
 	include/Utils.h
 	include/VolumeWidget.h)
 
-set(SRC_LIST
+set (SRC_LIST
 	src/Application.cpp
 	src/Logger.cpp
 	src/main.cpp
@@ -97,7 +94,7 @@ set(SRC_LIST
 	src/Utils.cpp
 	src/VolumeWidget.cpp)
 
-qt5_wrap_cpp(MOC_SRC_LIST
+qt5_wrap_cpp (MOC_SRC_LIST
 	include/Application.h
 	include/MainWindow.h
 	include/PlaylistModel.h
@@ -105,29 +102,31 @@ qt5_wrap_cpp(MOC_SRC_LIST
 	include/PlaylistViewDelegate.h
 	include/VolumeWidget.h)
 
-qt5_add_resources(RES_LIST
+qt5_add_resources (RES_LIST
 	res/SPlay.qrc)
 
-source_group("Header Files" FILES ${INCLUDE_LIST})
-source_group("Source Files" FILES ${SRC_LIST})
-source_group("Source Files\\MOC" FILES ${MOC_SRC_LIST})
-source_group("Resource Files" FILES ${RES_LIST})
+source_group ("Header Files" FILES ${INCLUDE_LIST})
+source_group ("Source Files" FILES ${SRC_LIST})
+source_group ("Source Files\\MOC" FILES ${MOC_SRC_LIST})
+source_group ("Resource Files" FILES ${RES_LIST})
 
-include_directories(
+include_directories (
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${external_INCLUDE_DIRS}
-	${taglib_include_dirs})
+	${EXTERNAL_INCLUDE_DIRS}
+	${TAGLIB_INCLUDE_DIRS})
 
-add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
+add_executable (${PROJECT_NAME} WIN32 MACOSX_BUNDLE
 	${INCLUDE_LIST}
 	${SRC_LIST}
 	${MOC_SRC_LIST}
-	${RES_LIST}
-	${TagSrcFile} # Some miracle
-	)
+	${RES_LIST})
+
+if (NOT WIN32)
+	set (UNIX_DEPENDENCY "-lz")
+endif ()
 
 target_link_libraries(${PROJECT_NAME}
 	${Qt5Core_QTMAIN_LIBRARIES}
 	${CMake_QT_LIBRARIES}
-	${taglib_libraries}
-)
+	${TAGLIB_LIBRARIES}
+	${UNIX_DEPENDENCY})

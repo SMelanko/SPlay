@@ -1,7 +1,7 @@
 #include "PlaylistModel.h"
 #include "Utils.h"
 
-#include <fileref.h>
+#include <taglib/fileref.h>
 
 #include <QDataStream>
 #include <QDebug>

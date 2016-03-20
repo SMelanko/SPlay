@@ -4,80 +4,79 @@
 #	find_package(Taglib)
 #
 # On completion, the script defines the following variables:
-#	
-#		- Compound variables:
-#   taglib_found 
+#
+#	TAGLIB_FOUND
 #		- true if all requested components were found.
-#	taglib_libraries 
+#	TAGLIB_LIBRARIES
 #		- contains release (and debug if available) libraries for all
-#		  requested components.
-#		  It has the form "optimized LIB1 debug LIBd1 optimized LIB2 ...",
+#		  requested components. It has the form
+#		  "optimized LIB1 debug LIBd1 optimized LIB2 ...",
 #		  ready for use with the target_link_libraries command.
-#	taglib_include_dirs
+#	TAGLIB_INCLUDE_DIRS
 #		- Contains include directory for all requested components.
-
-if (NOT taglib_root)
-	set(taglib_root $ENV{taglib_root})
-endif()
-
-set(taglib_include_dirs
-	${taglib_root}/taglib
-	${taglib_root}/taglib/toolkit
-	${taglib_root}/taglib/ape
-	${taglib_root}/taglib/mpeg
-	${taglib_root}/taglib/mpeg/id3v1
-	${taglib_root}/taglib/mpeg/id3v2
-	${taglib_root}/bindings/c/)
+#	TAGLIB_VERSION
+#		- Current library version.
 
 if (WIN32)
-	set(taglib_lib_name "tag.lib")
-else ()
-	set(taglib_lib_name "libtag.a")
+	set (TAGLIB_ROOT "C:/Program Files/taglib")
+	set (TAGLIB_CONFIG_UTIL_NAME "taglib-config.cmd")
+elseif (UNIX OR APPLE)
+	set (TAGLIB_ROOT "/usr/local")
+	set (TAGLIB_CONFIG_UTIL_NAME "taglib-config")
 endif ()
 
-if (CMAKE_CL_64)
-	set(taglib_lib_path ${taglib_root}/lib/x64)
-else ()
-	set(taglib_lib_path ${taglib_root}/lib/x32)
-endif()
+find_program (TAGLIBCONFIG_EXECUTABLE
+	NAMES ${TAGLIB_CONFIG_UTIL_NAME} PATHS ${TAGLIB_ROOT}/bin)
 
-find_library(
-	taglib_debug_lib
-	NAMES
-		${taglib_lib_name}
-	PATHS
-		${taglib_lib_path}/Debug
-)
-
-if (NOT taglib_debug_lib)
-		message(FATAL_ERROR "${taglib_lib_name} for debug not found in ${taglib_lib_path}")
+if (TAGLIBCONFIG_EXECUTABLE)
+	exec_program (${TAGLIBCONFIG_EXECUTABLE}
+		ARGS --version OUTPUT_VARIABLE TAGLIB_VERSION)
 endif ()
 
-find_library(
-	taglib_release_lib
-	NAMES
-		${taglib_lib_name}
-	PATHS
-		${taglib_lib_path}/Release
-)
+set (TAGLIB_INCLUDE_DIRS ${TAGLIB_ROOT}/include)
+message (STATUS "Taglib includes ${TAGLIB_INCLUDE_DIRS}")
 
-if (NOT taglib_release_lib)
-		message(FATAL_ERROR "${taglib_lib_name} for release not found in ${taglib_lib_path}")
+if (WIN32)
+	if (CMAKE_CL_64)
+		set (TAGLIB_LIB_PATH "${TAGLIB_ROOT}/lib/x64")
+	else ()
+		set (TAGLIB_LIB_PATH "${TAGLIB_ROOT}/lib/x32")
+	endif ()
+	set (TAGLIB_LIB_NAME "tag.lib")
+elseif (UNIX OR APPLE)
+	set (TAGLIB_LIB_PATH "${TAGLIB_ROOT}/lib/taglib")
+	set (TAGLIB_LIB_NAME "libtag.a")
 endif ()
 
-list(APPEND taglib_libraries "optimized" ${taglib_release_lib})
+find_library (TAGLIB_DEBUG_LIB
+	NAMES ${TAGLIB_LIB_NAME} PATHS ${TAGLIB_LIB_PATH}/debug)
 
-if (taglib_debug_lib)
-	list(APPEND taglib_libraries "debug" ${taglib_debug_lib})
+if (NOT TAGLIB_DEBUG_LIB)
+	message (WARNING
+		"${TAGLIB_LIB_NAME} for debug not found in ${TAGLIB_LIB_PATH}/debug")
 endif ()
 
-mark_as_advanced(taglib_libraries)
+find_library (TAGLIB_RELEASE_LIB
+	NAMES ${TAGLIB_LIB_NAME} PATHS ${TAGLIB_LIB_PATH}/release)
 
-# Support the REQUIRED and QUIET arguments, and set CRYPTOPP_FOUND if found.
+if (NOT TAGLIB_RELEASE_LIB)
+	message(WARNING
+		"${TAGLIB_LIB_NAME} for release not found in ${TAGLIB_LIB_PATH}/release")
+endif ()
 
-if (DEFINED taglib_libraries)
-	set(taglib_found TRUE)
+list(APPEND TAGLIB_LIBRARIES "optimized" ${TAGLIB_RELEASE_LIB})
+
+if (TAGLIB_DEBUG_LIB)
+	list (APPEND TAGLIB_LIBRARIES "debug" ${TAGLIB_DEBUG_LIB})
+endif ()
+
+mark_as_advanced(TAGLIB_LIBRARIES)
+message (STATUS "Taglib libraries ${TAGLIB_LIBRARIES}")
+
+if (DEFINED TAGLIB_LIBRARIES)
+	set (TAGLIB_FOUND TRUE)
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(taglib REQUIRED_VARS taglib_root)
+find_package_handle_standard_args(Taglib
+	REQUIRED_VARS TAGLIB_ROOT VERSION_VAR TAGLIB_VERSION)
