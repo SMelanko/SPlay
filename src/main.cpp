@@ -46,11 +46,9 @@ int main(int argc, char** argv)
 	try {
 		splay::Application a{ argc, argv };
 		return a.exec();
-	}
-	catch (const std::exception exc) {
+	} catch (const std::exception exc) {
 		SPLAY_LOG_ERROR("std::exception has been occurred");
-	}
-	catch (...) {
+	} catch (...) {
 		SPLAY_LOG_ERROR("exception has been occurred");
 	}
 

@@ -1,0 +1,36 @@
+## How to build taglib
+### OS X and Ubuntu
+
+Open folder where you will clone taglib library from the git repo
+```
+# git clone https://github.com/taglib/taglib.git
+# cd taglib
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Debug .
+# make
+# sudo make install
+```
+Go to /usr/local/lib and make ‘taglib/debug’ dir,
+
+after move taglib’s libraries to the newly created folder.
+```
+# sudo mkdir taglib && cd taglib
+# sudo mkdir debug && sudo mkdir release
+# sudo mv /usr/local/lib/libtag.a /usr/local/lib/taglib/debug
+# sudo mv /usr/local/lib/libtag_c.a /usr/local/lib/taglib/debug
+```
+Repeat actions for release version.
+```
+# cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Release .
+# ...
+```
+
+### Windows
+1. Run CMake GUI application and choose folder where you installed library.
+Tick Advanced option. Generate. Configure.
+2. Run devenv.exe as administrator. It places in the
+‘C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE’
+Open taglib project and select debug version. Build the project.
+3. Install project: INSTALL -> Project Only -> Build Only INSTALL.
+4. Copy files from C:\Program Files\taglib\lib to the C:\Program Files\taglib\lib\debug.
+
+Repeat actions for release version.
