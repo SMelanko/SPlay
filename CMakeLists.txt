@@ -13,10 +13,10 @@ message (STATUS "Generate ${CMAKE_BUILD_TYPE} version")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
 	"${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
 	# Using Clang.
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -stdlib=libc++")
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -stdlib=libc++")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	# Using GCC.
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -pthread")
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -pthread")
 	add_definitions (-Wall -pedantic)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 	# Using Intel C++.
@@ -77,6 +77,7 @@ set (INCLUDE_LIST
 	include/PlaylistModel.h
 	include/PlaylistView.h
 	include/PlaylistViewDelegate.h
+	include/Settings.h
 	include/Slider.h
 	include/Types.h
 	include/Utils.h
@@ -90,6 +91,7 @@ set (SRC_LIST
 	src/PlaylistModel.cpp
 	src/PlaylistView.cpp
 	src/PlaylistViewDelegate.cpp
+	src/Settings.cpp
 	src/Slider.cpp
 	src/Utils.cpp
 	src/VolumeWidget.cpp)
