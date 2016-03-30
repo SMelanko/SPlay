@@ -63,8 +63,7 @@ void PlaylistView::dropEvent(QDropEvent* event)
 		event->accept();
 
 		Q_EMIT Move(_GetSelectedRows(), dest);
-	}
-	else {
+	} else {
 		event->acceptProposedAction();
 
 		Q_EMIT Insert(event->mimeData()->urls());

@@ -185,7 +185,7 @@ void MainWindow::_CreateCentralWgt()
 	connect(mPlayView, &PlaylistView::Insert,
 		mPlayModel, &PlaylistModel::OnInsert);
 	connect(mPlayView, &PlaylistView::Move,
-		mPlayModel,	&PlaylistModel::OnMove);
+		mPlayModel, &PlaylistModel::OnMove);
 	connect(mPlayView, &PlaylistView::Remove,
 		mPlayModel, &PlaylistModel::OnRemove);
 	mainLayout->addWidget(mPlayView);

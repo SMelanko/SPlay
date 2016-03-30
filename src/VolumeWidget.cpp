@@ -9,14 +9,15 @@ namespace splay
 VolumeWidget::VolumeWidget(QWidget* parent)
 	: QWidget{ parent }
 	, mSlider{ Q_NULLPTR }
-	{
+{
 	QBoxLayout* layout{ new QHBoxLayout{ this } };
 
 	mSlider = new QSlider{ Qt::Horizontal, this };
 	mSlider->setFixedHeight(20);
 	mSlider->setRange(0, 100);
 
-	connect(mSlider, &QAbstractSlider::valueChanged, this, &VolumeWidget::VolumeChanged);
+	connect(mSlider, &QAbstractSlider::valueChanged,
+		this, &VolumeWidget::VolumeChanged);
 
 	layout->addWidget(mSlider);
 

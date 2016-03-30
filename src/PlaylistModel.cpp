@@ -56,7 +56,8 @@ QVariant PlaylistModel::data(const QModelIndex& index, int role) const
 		return QVariant();
 	}
 
-	TagLib::FileRef f{ mData.media(row).canonicalUrl().toLocalFile().toStdString().c_str() };
+	QString path{ mData.media(row).canonicalUrl().toLocalFile() };
+	TagLib::FileRef f{ path.toStdString().c_str() };
 
 	if (role == Qt::DisplayRole) {
 		switch (column) {
@@ -88,8 +89,7 @@ Qt::ItemFlags PlaylistModel::flags(const QModelIndex& index) const
 
 	if (index.isValid()) {
 		return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defFlags;
-	}
-	else {
+	} else {
 		return Qt::ItemIsDropEnabled | defFlags;
 	}
 }
@@ -101,13 +101,13 @@ QVariant PlaylistModel::headerData(int section,
 		if (orientation == Qt::Horizontal) {
 			switch (section) {
 			case 0:
-				return QLatin1String("Playing");
+				return QStringLiteral("Playing");
 			case 1:
-				return QLatin1String("Author");
+				return QStringLiteral("Author");
 			case 2:
-				return QLatin1String("Title");
+				return QStringLiteral("Title");
 			case 3:
-				return QLatin1String("Duration");
+				return QStringLiteral("Duration");
 			}
 		}
 	}
